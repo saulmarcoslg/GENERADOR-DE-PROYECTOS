@@ -4,7 +4,7 @@
   "short_name": "Emprende Gastro",
   "description": "Plataforma académica para ideas, innovación y proyectos de emprendimiento gastronómico.",
   "lang": "es-BO",
-  "start_url": "./Emprende_Gastro.html",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
