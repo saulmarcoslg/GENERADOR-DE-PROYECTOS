@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#253B8F">
+<meta name="description" content="Asistente académico para crear emprendimientos gastronómicos, modelos de negocio y proyectos técnicos.">
+<meta name="application-name" content="Emprende Gastro">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Emprende Gastro">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>Emprende Gastro V11.5 | PWA</title>
+<style>
+:root{--accent:#5368f5;--ink:#252525;--muted:#666;--line:#e8dfd0;--paper:#fff;--soft:#fff4dc;--blue:#5368f5;--orange:#ff9800;--cyan:#05afd0;--green:#50bd4d;--red:#f34f59;--navy:#303f91}
+*{box-sizing:border-box}body{margin:0;background:#faedcf;color:var(--ink);font:16px/1.5 Arial,Helvetica,sans-serif}
+header{background:var(--blue);color:#fff;border-bottom:0;padding:24px 5vw;box-shadow:0 4px 12px #26336b35}
+header .tag{color:#fff2c9;font-weight:700;letter-spacing:.12em;font-size:12px;text-transform:uppercase}
+h1{margin:5px 0;font-size:clamp(27px,4vw,40px);line-height:1.1}header p{margin:8px 0 0;color:#eef0ff}
+main{max-width:1050px;margin:28px auto;padding:0 18px 50px}
+.progress{display:flex;gap:8px;margin-bottom:20px}.progress span{height:5px;background:#ddd;flex:1;border-radius:8px}.progress span.active{background:var(--accent)}
+.panel{background:var(--paper);border:0;border-radius:18px;padding:clamp(18px,3vw,30px);margin-bottom:20px;box-shadow:0 5px 16px #5d4b2b24}
+h2{font-size:23px;margin:0 0 8px;color:#26336b}h3{font-size:18px;margin:0 0 7px}.intro{color:var(--muted);margin:0 0 22px}
+label{display:block;font-weight:700;margin:16px 0 6px}input,select,textarea{width:100%;padding:12px;border:1px solid #cfcac4;border-radius:4px;background:white;font:inherit;color:var(--ink)}
+textarea{min-height:85px;resize:vertical}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+button{border:0;border-radius:15px;padding:14px 21px;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 5px 12px #2929292b;transition:transform .16s,box-shadow .16s,filter .16s}
+.primary{background:var(--orange);color:white}.secondary{background:var(--blue);color:white}.outline{background:var(--cyan);color:white;border:0}
+button:hover{filter:brightness(1.04);transform:translateY(-2px);box-shadow:0 8px 16px #29292938}button:active{transform:translateY(1px);box-shadow:0 2px 5px #29292930}.hidden{display:none!important}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:13px;margin-top:18px}
+.idea{border:1px solid var(--line);border-radius:13px;padding:17px;background:#fff;box-shadow:0 4px 11px #493d2a1c;transition:transform .18s,box-shadow .18s}.idea.selected{border:2px solid var(--accent);background:var(--soft);box-shadow:0 7px 18px #5368f54a;transform:translateY(-2px)}
+.idea small{color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.idea p{color:#555;margin:8px 0}.idea button{margin-top:8px}
+.note{background:var(--soft);border-left:5px solid var(--orange);border-radius:8px;padding:13px 16px;color:#51443c;box-shadow:0 3px 9px #493d2a12}
+.output{white-space:pre-wrap;background:#fffaf0;border:1px solid var(--line);border-radius:10px;padding:18px;min-height:150px;box-shadow:inset 0 1px 4px #493d2a10}
+footer{text-align:center;color:#665d50;font-size:13px;padding:15px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.actions button{width:100%}}
+@media print{body{background:white}header{padding:10px 0}main{margin:0;max-width:none}.no-print,button,.progress{display:none!important}.panel{border:0;padding:8px 0}.output{border:0;padding:0}}
+
+/* Interfaz profesional con navegación lateral y asistente conversacional */
+body{background:#f3f5fb}
+header{margin-left:258px;padding:20px 34px;background:linear-gradient(115deg,#3546a8,#596cf5);min-height:118px}
+main{max-width:1200px;margin:25px 28px 35px 286px;padding:0 18px 60px}
+footer{margin-left:258px}
+#sidebar{position:fixed;z-index:50;left:0;top:0;bottom:0;width:258px;background:#fff;box-shadow:5px 0 22px #26336b18;padding:22px 15px;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:7px 9px 22px;border-bottom:1px solid #e8eaf3;margin-bottom:18px}
+.brand-mark{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#ff9800,#f34f59);display:grid;place-items:center;color:#fff;font-size:22px;box-shadow:0 5px 12px #f34f5940}
+.brand strong{display:block;color:#28336f;font-size:17px}.brand small{color:#77809c;font-size:11px}
+.nav-label{font-size:10px;letter-spacing:.13em;font-weight:800;color:#9097ae;padding:14px 11px 7px}
+.nav-btn{width:100%;display:flex;align-items:center;gap:12px;background:#fff;color:#303957;border:1px solid transparent;box-shadow:none;text-align:left;padding:12px 13px;border-radius:12px;margin:4px 0;font-weight:600}
+.nav-btn:hover,.nav-btn.active{background:#eef1ff;border-color:#cbd2ff;color:#465be2;transform:none;box-shadow:0 3px 10px #5368f51c}
+.nav-ico{width:24px;text-align:center;font-size:18px}
+.sidebar-tip{margin-top:22px;padding:14px;border-radius:13px;background:#fff5e7;color:#76532c;font-size:12px}
+.top-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:-5px}
+.top-actions button{padding:9px 13px;border-radius:10px;font-size:12px}
+#voiceRead{background:#fff;color:#3546a8}
+#aiLauncher{position:fixed;right:24px;bottom:22px;z-index:90;border-radius:50px;background:linear-gradient(135deg,#5368f5,#303f91);color:#fff;padding:16px 22px;box-shadow:0 9px 24px #26336b55}
+#aiPanel{position:fixed;right:22px;bottom:88px;z-index:100;width:min(390px,calc(100vw - 28px));height:min(590px,calc(100vh - 120px));background:#fff;border-radius:20px;box-shadow:0 18px 55px #18224b45;border:1px solid #e2e6f6;display:flex;flex-direction:column;overflow:hidden}
+.ai-head{background:linear-gradient(120deg,#3546a8,#596cf5);color:#fff;padding:16px;display:flex;align-items:center;justify-content:space-between}
+.ai-head strong{font-size:16px}.ai-head small{display:block;color:#e3e7ff;font-size:11px}
+.ai-head button{background:#ffffff22;color:white;box-shadow:none;padding:6px 10px}
+.ai-status{height:7px;width:7px;background:#67e5a2;border-radius:50%;display:inline-block;margin-right:6px}
+#chatMessages{padding:14px;overflow:auto;flex:1;background:#f7f8fd}
+.chat-msg{max-width:92%;padding:11px 13px;border-radius:14px;margin:8px 0;white-space:pre-wrap;font-size:13px;line-height:1.5}
+.chat-msg.bot{background:#fff;border:1px solid #e6e9f5;border-top-left-radius:4px;color:#333d5b}
+.chat-msg.user{background:#5368f5;color:white;margin-left:auto;border-top-right-radius:4px}
+.chat-tools{display:flex;gap:7px;padding:9px 12px 0;background:#fff}
+.chat-tools button{font-size:11px;padding:8px 10px;border-radius:9px;box-shadow:none;background:#f0f2ff;color:#4455c3}
+.chat-compose{display:flex;gap:7px;padding:10px 12px 13px;background:#fff;border-top:1px solid #edf0f8}
+.chat-compose textarea{min-height:45px;max-height:100px;resize:vertical;border-radius:12px;font-size:13px;padding:10px}
+.chat-compose button{padding:10px 12px;border-radius:11px;box-shadow:none}
+#chatMic{background:#fff1e3;color:#d87800}#chatSend{background:#5368f5;color:#fff}
+.voice-hint{padding:0 13px 9px;color:#8a91a8;font-size:10px;background:#fff}
+#micNotice{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:120;background:#252e58;color:#fff;padding:10px 16px;border-radius:30px;box-shadow:0 6px 18px #0003;font-size:12px}
+@media(max-width:850px){
+ #sidebar{width:76px;padding:16px 8px}.brand{justify-content:center;padding:4px 0 16px}.brand-text,.nav-label,.nav-btn span:not(.nav-ico),.sidebar-tip{display:none}
+ .nav-btn{justify-content:center;padding:13px 5px}.nav-ico{font-size:20px}
+ header{margin-left:76px;padding:18px 20px}main{margin:20px 12px 30px 88px;padding:0 8px 60px}footer{margin-left:76px}
+}
+@media(max-width:560px){
+ #sidebar{width:58px}.brand-mark{width:37px;height:37px}.nav-btn{padding:11px 3px}
+ header{margin-left:58px;padding:16px 14px}main{margin-left:66px;margin-right:7px;padding:0 5px 50px}footer{margin-left:58px}
+ .top-actions{margin-top:8px;justify-content:flex-start}#aiLauncher{right:12px;bottom:12px;padding:13px 17px}
+ #aiPanel{right:8px;bottom:70px;width:calc(100vw - 16px)}
+}
+@media print{#sidebar,#aiPanel,#aiLauncher,.top-actions{display:none!important}header,main,footer{margin-left:0!important}}
+
+.field-voice{display:flex;gap:6px;align-items:stretch}.field-voice input,.field-voice textarea{flex:1;min-width:0}
+.field-mic{padding:7px 10px;border-radius:10px;background:#fff1e3;color:#c97500;box-shadow:none;align-self:flex-start;margin-top:4px}
+
+
+.break-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.finance-card{background:#fff;border:1px solid #e5e8f1;border-radius:14px;padding:17px}
+.finance-card h3{color:#303f91;margin-bottom:10px}
+.finance-inputs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.finance-inputs label{font-size:13px;margin:8px 0 5px}
+.finance-inputs input{padding:10px}
+.finance-results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+.metric{border-radius:13px;padding:15px;background:#eef1ff;border:1px solid #dce2ff}
+.metric small{display:block;color:#59658e;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.metric strong{display:block;color:#303f91;font-size:clamp(18px,2vw,25px);margin-top:5px}
+.metric.orange{background:#fff3e5;border-color:#ffe0b7}.metric.orange strong{color:#c87500}
+.metric.green{background:#eaf8ee;border-color:#cdebd5}.metric.green strong{color:#268447}
+.metric.red{background:#fff0f0;border-color:#f4d0d0}.metric.red strong{color:#c43c3c}
+.finance-note{background:#f8f9fd;border-left:4px solid #5368f5;padding:12px 14px;border-radius:8px;font-size:13px;color:#4e5875}
+#breakEvenChart{width:100%;height:280px;display:block;background:#fff;border:1px solid #e9ebf3;border-radius:12px}
+@media(max-width:700px){.break-grid,.finance-inputs{grid-template-columns:1fr}.finance-results{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media print{#breakEvenPanel{display:block!important}}
+
+
+#technicalTable input,#technicalTable select{padding:7px 8px;margin:0;min-width:78px;font-size:12px}
+#technicalTable td{padding:6px;border-bottom:1px solid #eceef5}
+#technicalTable button{padding:6px 8px;font-size:11px;box-shadow:none;background:#fff0f0;color:#bd4141}
+
+
+#supportFiles{background:#fff;border:1px dashed #9aa8e8;padding:13px;border-radius:10px}
+#supportText{min-height:150px;background:#fff}
+
+
+/* EMPRENDE GASTRO V11 — sistema visual profesional multiplataforma */
+:root{--accent:#5268ee;--ink:#17213d;--muted:#65708c;--line:#e4e9f5;--paper:#fff;--soft:#f3f5ff;--blue:#5368f5;--orange:#f59a23;--cyan:#12a9c7;--green:#21a36b;--red:#e65b68;--navy:#253b8f}
+html{scroll-behavior:smooth}
+body{background:#f4f6fc;color:#17213d;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+#sidebar{background:linear-gradient(180deg,#fff 0%,#f8f9ff 100%);border-right:1px solid #e8ecf6;box-shadow:8px 0 30px #253b8f0c}
+.brand-mark{background:linear-gradient(145deg,#5368f5,#263b91);box-shadow:0 8px 18px #5368f54d;border-radius:14px}
+.brand strong{font-weight:850;letter-spacing:.015em;color:#1f2e68}
+.nav-label{letter-spacing:.14em;font-size:10px;color:#8992ad}
+.nav-btn{border:1px solid transparent;border-radius:13px;padding:12px 13px;margin:5px 0;color:#46516f;transition:all .2s ease}
+.nav-btn:hover,.nav-btn.active{background:linear-gradient(100deg,#edf0ff,#f7f8ff);border-color:#d9dfff;color:#3f55d5;transform:translateX(3px);box-shadow:0 7px 18px #5368f526}
+.nav-ico{display:grid;place-items:center;width:25px;height:25px;flex:0 0 25px;color:#5869d9}
+.nav-ico svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+header{background:radial-gradient(circle at 85% 0%,#6c7dff 0%,transparent 33%),linear-gradient(115deg,#253b8f 0%,#465ce0 60%,#586df4 100%);border-radius:0 0 26px 26px;box-shadow:0 12px 30px #263b9130;padding-top:27px;padding-bottom:26px}
+header h1{font-weight:850;letter-spacing:-.035em}
+header .tag{color:#dce3ff}
+header p{color:#e7eaff}
+.version-pill{display:inline-block;vertical-align:middle;background:#ffffff20;border:1px solid #ffffff40;color:#fff;border-radius:30px;font-size:11px;letter-spacing:.08em;padding:6px 10px}
+main{max-width:1240px}
+.panel{border:1px solid #e9edf7;border-radius:20px;box-shadow:0 8px 26px #273b8f0d;transition:box-shadow .2s ease,border-color .2s ease}
+.panel:hover{box-shadow:0 12px 32px #273b8f13;border-color:#dce3fa}
+h2{color:#243878;font-weight:800;letter-spacing:-.02em}
+h3{color:#26366e;font-weight:750}
+label{color:#394565;font-size:13px}
+input,select,textarea{border:1px solid #dce2f0;border-radius:11px;background:#fff;transition:border-color .18s,box-shadow .18s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#6578f5;box-shadow:0 0 0 4px #5368f51b}
+button{border-radius:12px;box-shadow:0 5px 13px #1b2b5b1c;transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+button:hover{transform:translateY(-3px);box-shadow:0 12px 24px #1b2b5b30;filter:brightness(1.04)}
+button:focus-visible,.nav-btn:focus-visible{outline:3px solid #f4a62c;outline-offset:3px}
+.primary{background:linear-gradient(135deg,#f8a52e,#ee8519)}
+.secondary{background:linear-gradient(135deg,#6478fa,#4659db)}
+.outline{background:linear-gradient(135deg,#18b4cc,#078da9)}
+.install-btn{background:linear-gradient(135deg,#20a36d,#168557);color:#fff}
+.cards{gap:16px}
+.idea{border:1px solid #e7eaf4;border-radius:16px;box-shadow:0 6px 18px #2438780c}
+.idea:hover{transform:translateY(-4px);box-shadow:0 14px 28px #2438781d}
+.output{background:#f8f9ff;border-color:#e3e7f8;border-radius:14px}
+.note,.finance-note{border-radius:12px}
+#aiLauncher{background:linear-gradient(135deg,#5c70f5,#263b91);box-shadow:0 12px 28px #263b9150}
+#aiLauncher:hover{box-shadow:0 16px 34px #263b9160}
+#aiPanel{border:1px solid #dfe5f5;box-shadow:0 22px 65px #17244b40}
+.ai-head{background:linear-gradient(115deg,#253b8f,#596df3)}
+.sidebar-tip{background:linear-gradient(145deg,#eef1ff,#fff8e9);border:1px solid #e5e8f7;color:#58617f}
+#breakEvenChart{border-radius:14px}
+footer{color:#77819b}
+@media(max-width:850px){
+ #sidebar{box-shadow:5px 0 20px #253b8f14}
+ .nav-btn:hover,.nav-btn.active{transform:none}
+ header{border-radius:0 0 20px 20px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+
+/* V11.1 — calculadora financiera adaptable y con jerarquía visual */
+#breakEvenPanel{
+ width:100%;max-width:100%;min-width:0;overflow:hidden;
+ padding:clamp(14px,2.3vw,30px);
+}
+#breakEvenPanel .intro{max-width:78ch;line-height:1.65}
+#breakEvenPanel>h2{font-size:clamp(21px,2.4vw,29px);line-height:1.2;margin-bottom:9px}
+#breakEvenPanel .finance-note{
+ background:linear-gradient(110deg,#f2f5ff,#f8faff);
+ border:1px solid #e0e7fb;border-left:4px solid #5368f5;
+ border-radius:13px;padding:14px 16px;line-height:1.55;
+}
+#breakEvenPanel .finance-card{
+ min-width:0;padding:clamp(14px,1.8vw,22px);
+ border:1px solid #e5eaf5;border-radius:17px;
+ box-shadow:0 5px 18px #1d32650b;
+}
+#breakEvenPanel .finance-card h3{
+ display:flex;align-items:center;gap:9px;
+ font-size:clamp(15px,1.5vw,18px);line-height:1.3;
+}
+#breakEvenPanel .finance-card h3:before{
+ content:"";display:block;width:4px;height:22px;flex:0 0 4px;
+ border-radius:8px;background:linear-gradient(#6176f5,#263b91);
+}
+#breakEvenPanel .break-grid{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ align-items:stretch;gap:16px;width:100%;min-width:0;
+}
+#breakEvenPanel .finance-inputs{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:9px 13px;width:100%;min-width:0;
+}
+#breakEvenPanel .finance-inputs>div{min-width:0}
+#breakEvenPanel .finance-inputs label{
+ font-size:12px;line-height:1.35;min-height:30px;margin:8px 0 5px;
+}
+#breakEvenPanel input[type="number"],#breakEvenPanel input[type="file"]{
+ width:100%;min-width:0;max-width:100%;font-variant-numeric:tabular-nums;
+}
+#breakEvenPanel .finance-inputs input{padding:10px 11px;border-radius:10px}
+#breakEvenPanel .finance-results{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:11px;width:100%;min-width:0;margin-top:17px;
+}
+#breakEvenPanel .metric{
+ min-width:0;min-height:91px;padding:14px 15px;
+ border-radius:15px;display:flex;flex-direction:column;justify-content:center;
+ box-shadow:0 4px 12px #1c32600a;
+}
+#breakEvenPanel .metric small{
+ font-size:10px;line-height:1.4;letter-spacing:.07em;
+ overflow-wrap:anywhere;
+}
+#breakEvenPanel .metric strong{
+ display:block;max-width:100%;font-size:clamp(17px,1.65vw,24px);
+ line-height:1.25;overflow-wrap:anywhere;font-variant-numeric:tabular-nums;
+}
+#breakEvenPanel .metric.orange{background:linear-gradient(145deg,#fff8ed,#fff1dc);border-color:#f8dfb9}
+#breakEvenPanel .metric.green{background:linear-gradient(145deg,#effaf3,#e6f6ed);border-color:#cfead9}
+#breakEvenPanel .metric.red{background:linear-gradient(145deg,#fff4f4,#ffeded);border-color:#f4d5d5}
+#breakEvenPanel #beMessage{margin-top:15px;font-weight:600}
+#breakEvenPanel #breakEvenChart{
+ display:block;width:100%;max-width:100%;height:auto;aspect-ratio:1000/330;
+ min-height:190px;max-height:360px;object-fit:contain;
+ border:1px solid #e5eaf5;border-radius:15px;padding:5px;
+}
+#breakEvenPanel .actions{gap:9px;align-items:center}
+#breakEvenPanel .actions button{min-height:42px;padding:11px 15px;font-size:13px}
+#breakEvenPanel #technicalTable{min-width:700px;border-collapse:separate;border-spacing:0}
+#breakEvenPanel #technicalTable th{
+ position:sticky;top:0;background:#eef1ff;color:#394879;
+ font-size:11px;line-height:1.35;white-space:nowrap;
+}
+#breakEvenPanel #technicalTable td{vertical-align:middle}
+#breakEvenPanel #technicalTable input,#breakEvenPanel #technicalTable select{
+ max-width:100%;border-radius:8px;
+}
+#breakEvenPanel .finance-card[style*="margin-top:18px"]{margin-top:16px!important}
+#breakEvenPanel .finance-results .metric:nth-child(4){outline:2px solid #f4d59f;outline-offset:-2px}
+@media(max-width:1050px){
+ #breakEvenPanel .finance-results{grid-template-columns:repeat(3,minmax(0,1fr))}
+ #breakEvenPanel .metric{padding:12px}
+}
+@media(max-width:850px){
+ #breakEvenPanel .break-grid{grid-template-columns:1fr}
+ #breakEvenPanel .finance-results{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #breakEvenPanel .finance-card{padding:16px}
+}
+@media(max-width:560px){
+ #breakEvenPanel{padding:13px}
+ #breakEvenPanel .finance-inputs{grid-template-columns:1fr;gap:5px}
+ #breakEvenPanel .finance-results{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #breakEvenPanel .metric{min-height:82px;padding:10px}
+ #breakEvenPanel .metric small{font-size:9px}
+ #breakEvenPanel .metric strong{font-size:17px}
+ #breakEvenPanel .actions{display:grid;grid-template-columns:1fr}
+ #breakEvenPanel .actions button{width:100%}
+ #breakEvenPanel #breakEvenChart{min-height:160px}
+}
+@media(max-width:370px){
+ #breakEvenPanel .finance-results{grid-template-columns:1fr}
+ #breakEvenPanel .metric{min-height:70px}
+}
+@media print{
+ #breakEvenPanel{padding:0!important;overflow:visible!important}
+ #breakEvenPanel .break-grid{grid-template-columns:1fr 1fr!important}
+ #breakEvenPanel .finance-results{grid-template-columns:repeat(3,1fr)!important}
+ #breakEvenPanel .finance-card,#breakEvenPanel .metric{break-inside:avoid}
+ #breakEvenPanel #breakEvenChart{max-height:240px}
+}
+
+
+/* V11.2 — encuadre definitivo de finanzas y nueva iconografía APA */
+*,*::before,*::after{box-sizing:border-box}
+main{width:min(100% - 24px,1240px);max-width:1240px;min-width:0}
+#breakEvenPanel{
+ display:block!important;width:100%;max-width:100%;min-width:0;
+ margin:0 auto 26px;padding:clamp(16px,2.2vw,30px);
+ overflow:visible;border:1px solid #dfe5f2;border-radius:22px;
+ background:linear-gradient(180deg,#fff 0%,#fbfcff 100%);
+ box-shadow:0 14px 38px rgba(34,54,110,.11);
+}
+#breakEvenPanel.hidden{display:none!important}
+#breakEvenPanel>h2{
+ display:flex;align-items:center;gap:12px;
+ margin:-2px 0 10px;padding:0 0 15px;
+ border-bottom:1px solid #e8edf7;
+ font-size:clamp(22px,2.1vw,30px);font-weight:850;color:#263b88;
+}
+#breakEvenPanel>h2:before{
+ content:"";width:42px;height:42px;flex:0 0 42px;border-radius:13px;
+ background:#edf0ff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234d61dc' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 19h18M5 16l4-5 4 2 6-8'/%3E%3Cpath d='M15 5h4v4'/%3E%3C/svg%3E") center/24px no-repeat;
+}
+#breakEvenPanel>.intro{max-width:850px;margin-bottom:17px;color:#66718d;line-height:1.65}
+#breakEvenPanel .finance-note{
+ margin:12px 0 16px;padding:14px 17px;
+ background:#f1f5ff;border:1px solid #dce5fb;border-left:5px solid #5368f5;
+ border-radius:13px;color:#435273;line-height:1.55;
+}
+#breakEvenPanel .finance-card{
+ width:100%;max-width:100%;min-width:0;padding:clamp(14px,1.8vw,22px);
+ margin:0!important;background:#fff;border:1px solid #e2e8f3;border-radius:17px;
+ box-shadow:0 5px 18px rgba(36,55,105,.055);
+}
+#breakEvenPanel .finance-card h3{
+ display:flex;align-items:center;gap:10px;color:#293c80;
+ font-size:16px;font-weight:800;line-height:1.35;margin:0 0 13px;
+}
+#breakEvenPanel .finance-card h3:before{
+ content:"";width:5px;height:23px;flex:0 0 5px;border-radius:8px;background:#5368f5;
+}
+#breakEvenPanel .break-grid{
+ width:100%;max-width:100%;min-width:0;
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:16px;align-items:start;margin:16px 0!important;
+}
+#breakEvenPanel .finance-inputs{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:9px 13px;width:100%;min-width:0;
+}
+#breakEvenPanel .finance-inputs>div{min-width:0}
+#breakEvenPanel .finance-inputs label{
+ display:block;min-height:0;margin:5px 0 6px;
+ color:#52607d;font-size:12px;font-weight:700;line-height:1.4;
+}
+#breakEvenPanel input[type=number],#breakEvenPanel input[type=file]{
+ display:block;width:100%;max-width:100%;min-width:0;
+ border:1px solid #dce3f0;border-radius:10px;background:#fff;
+ padding:10px 11px;font-size:14px;
+}
+#breakEvenPanel .finance-results{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:12px;width:100%;max-width:100%;min-width:0;margin:17px 0;
+}
+#breakEvenPanel .metric{
+ display:flex;flex-direction:column;justify-content:center;gap:6px;
+ min-width:0;min-height:96px;padding:14px 15px;border-radius:15px;
+ border:1px solid #e0e6f3;background:#f5f7ff;
+ box-shadow:0 4px 14px rgba(31,49,100,.05);
+}
+#breakEvenPanel .metric small{
+ display:block;color:#5d6987;font-size:10px;font-weight:800;
+ line-height:1.4;letter-spacing:.055em;text-transform:uppercase;
+ overflow-wrap:anywhere;
+}
+#breakEvenPanel .metric strong{
+ display:block;max-width:100%;color:#293e91;
+ font-size:clamp(16px,1.55vw,23px);font-weight:850;line-height:1.25;
+ overflow-wrap:anywhere;font-variant-numeric:tabular-nums;
+}
+#breakEvenPanel .metric.orange{background:#fff7eb;border-color:#f4dfbf}
+#breakEvenPanel .metric.orange strong{color:#bd720d}
+#breakEvenPanel .metric.green{background:#eff9f2;border-color:#d2ead9}
+#breakEvenPanel .metric.green strong{color:#21814a}
+#breakEvenPanel .metric.red{background:#fff2f2;border-color:#f2d5d5}
+#breakEvenPanel .metric.red strong{color:#bd4242}
+#breakEvenPanel .metric:nth-child(4){border:2px solid #edc77f;box-shadow:0 7px 18px rgba(203,139,37,.13)}
+#breakEvenPanel #beMessage{margin:12px 0 17px;padding:14px 17px}
+#breakEvenPanel #breakEvenChart{
+ width:100%;max-width:100%;height:auto;aspect-ratio:1000/330;
+ min-height:180px;max-height:360px;display:block;object-fit:contain;
+ padding:6px;background:#fff;border:1px solid #e4e9f2;border-radius:15px;
+}
+#breakEvenPanel .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+#breakEvenPanel .actions button{min-height:42px;padding:10px 15px}
+#breakEvenPanel .finance-card[style*="margin-top"]{margin-top:16px!important}
+#breakEvenPanel #technicalTable{width:100%;min-width:700px;border-collapse:separate;border-spacing:0}
+#breakEvenPanel #technicalTable th{position:sticky;top:0;background:#eef2ff;color:#35467f;font-size:11px}
+#breakEvenPanel #technicalTable td{vertical-align:middle}
+#breakEvenPanel #technicalTable input,#breakEvenPanel #technicalTable select{min-width:70px;max-width:100%;padding:7px;border-radius:8px}
+.nav-ico-apa,.nav-ico-finance{position:relative}
+.nav-ico-apa b{position:absolute;right:-8px;bottom:-5px;padding:1px 3px;border-radius:4px;background:#e9edff;color:#354fc1;font-size:7px;line-height:1.1;letter-spacing:-.02em}
+.nav-btn:hover .nav-ico-apa,.nav-btn.active .nav-ico-apa{color:#354fc1}
+.nav-btn:hover .nav-ico-finance,.nav-btn.active .nav-ico-finance{color:#16845a}
+@media(max-width:900px){
+ main{width:min(100% - 18px,100%)}
+ #breakEvenPanel .break-grid{grid-template-columns:1fr}
+ #breakEvenPanel .finance-results{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:620px){
+ #breakEvenPanel{padding:14px;border-radius:16px}
+ #breakEvenPanel .finance-inputs{grid-template-columns:1fr;gap:6px}
+ #breakEvenPanel .finance-results{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #breakEvenPanel .metric{min-height:82px;padding:10px}
+ #breakEvenPanel .metric small{font-size:9px}
+ #breakEvenPanel .metric strong{font-size:17px}
+ #breakEvenPanel .actions{display:grid;grid-template-columns:1fr}
+ #breakEvenPanel .actions button{width:100%}
+ #breakEvenPanel #breakEvenChart{min-height:155px}
+}
+@media(max-width:360px){
+ #breakEvenPanel .finance-results{grid-template-columns:1fr}
+ #breakEvenPanel .metric{min-height:68px}
+}
+@media print{
+ #breakEvenPanel{display:block!important;box-shadow:none;border:0;padding:0}
+ #breakEvenPanel .break-grid{grid-template-columns:1fr 1fr!important}
+ #breakEvenPanel .finance-results{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ #breakEvenPanel .finance-card,#breakEvenPanel .metric{break-inside:avoid}
+}
+
+
+/* V11.3 — menú lateral plegable y deslizable */
+#sidebar{transition:width .28s ease,transform .28s ease,box-shadow .28s ease}
+.sidebar-toggle{
+ position:fixed;z-index:125;top:17px;left:270px;width:42px;height:42px;
+ padding:9px;display:grid;place-items:center;border:1px solid #ffffff55;
+ border-radius:12px;background:#fff;color:#344a9e;
+ box-shadow:0 5px 16px #172b6330;cursor:pointer;
+ transition:left .28s ease,transform .2s ease,box-shadow .2s ease
+}
+.sidebar-toggle:hover{transform:translateY(-2px);box-shadow:0 9px 20px #172b6340}
+.sidebar-toggle svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.sidebar-backdrop{display:none}
+body.sidebar-collapsed #sidebar{width:76px}
+body.sidebar-collapsed #sidebar .brand{justify-content:center;padding-left:0;padding-right:0}
+body.sidebar-collapsed #sidebar .brand-text,
+body.sidebar-collapsed #sidebar .nav-label,
+body.sidebar-collapsed #sidebar .nav-btn span:not(.nav-ico),
+body.sidebar-collapsed #sidebar .sidebar-tip{display:none}
+body.sidebar-collapsed #sidebar .nav-btn{justify-content:center;padding:12px 5px}
+body.sidebar-collapsed #sidebar .nav-ico{margin:0}
+body.sidebar-collapsed .sidebar-toggle{left:88px}
+body.sidebar-collapsed header,body.sidebar-collapsed footer{margin-left:76px}
+body.sidebar-collapsed main{margin-left:94px}
+@media(max-width:850px){
+ #sidebar{width:258px!important;transform:translateX(-105%);z-index:115;box-shadow:10px 0 35px #172b6330}
+ #sidebar .brand-text,#sidebar .nav-label,#sidebar .nav-btn span:not(.nav-ico),#sidebar .sidebar-tip{display:initial}
+ #sidebar .nav-label{display:block}
+ #sidebar .nav-btn{justify-content:flex-start;padding:12px 13px}
+ #sidebar .brand{justify-content:flex-start}
+ .sidebar-toggle{left:15px;top:14px;width:43px;height:43px;background:#fff;border-color:#dfe5f5}
+ body.sidebar-open #sidebar{transform:translateX(0)}
+ body.sidebar-open .sidebar-backdrop{display:block;position:fixed;inset:0;z-index:110;background:#101a35a1;backdrop-filter:blur(2px)}
+ body.sidebar-open .sidebar-toggle{left:270px;background:#fff;color:#344a9e}
+ body.sidebar-collapsed header,body.sidebar-collapsed footer,body.sidebar-collapsed main{margin-left:0}
+ header{padding-left:70px!important}
+}
+@media(max-width:560px){
+ #sidebar{width:min(290px,84vw)!important}
+ body.sidebar-open .sidebar-toggle{left:min(calc(84vw + 8px),298px)}
+ header{padding-left:68px!important}
+}
+@media(prefers-reduced-motion:reduce){#sidebar,.sidebar-toggle{transition:none!important}}
+@media print{.sidebar-toggle,.sidebar-backdrop{display:none!important}}
+
+
+/* V11.4 — corrección de encuadre, desbordamiento y superposición en punto de equilibrio */
+#breakEvenPanel,
+#breakEvenPanel *{box-sizing:border-box}
+#breakEvenPanel{
+ position:relative;display:block;width:auto;max-width:none;min-width:0;
+ height:auto;min-height:0;max-height:none;
+ margin:24px 28px 36px 286px!important;
+ padding:clamp(16px,2vw,28px);
+ overflow:visible!important;
+ contain:layout style;
+}
+#breakEvenPanel.hidden{display:none!important}
+#breakEvenPanel h2,
+#breakEvenPanel h3,
+#breakEvenPanel p,
+#breakEvenPanel label,
+#breakEvenPanel small,
+#breakEvenPanel strong{
+ max-width:100%;height:auto;min-height:0;
+ white-space:normal;overflow-wrap:anywhere;word-break:normal;
+}
+#breakEvenPanel h2{line-height:1.25;margin:0 0 14px}
+#breakEvenPanel h3{line-height:1.35;margin-bottom:14px}
+#breakEvenPanel .intro{line-height:1.6;margin:0 0 14px}
+#breakEvenPanel .finance-note{
+ display:block;width:100%;height:auto;min-height:0;
+ padding:14px 16px;line-height:1.55;white-space:normal;
+ overflow-wrap:anywhere;
+}
+#breakEvenPanel .finance-card{
+ display:block;width:100%;height:auto;min-height:0;max-height:none;
+ min-width:0;padding:clamp(14px,1.6vw,22px);
+ overflow:visible;
+}
+#breakEvenPanel .break-grid{
+ display:grid;width:100%;height:auto;min-height:0;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:16px;align-items:stretch;overflow:visible;
+}
+#breakEvenPanel .break-grid>.finance-card{min-width:0;height:100%}
+#breakEvenPanel .finance-inputs{
+ display:grid;width:100%;min-width:0;height:auto;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:12px 14px;align-items:end;
+}
+#breakEvenPanel .finance-inputs>div{min-width:0;width:100%}
+#breakEvenPanel .finance-inputs label{
+ display:block;width:100%;height:auto;min-height:0;
+ margin:4px 0 7px;line-height:1.4;font-size:12px;
+}
+#breakEvenPanel input,
+#breakEvenPanel select{
+ display:block;width:100%;max-width:100%;min-width:0;height:auto;
+ min-height:42px;padding:10px 12px;line-height:1.35;
+}
+#breakEvenPanel input[type=file]{min-height:0;white-space:normal}
+#breakEvenPanel .finance-results{
+ display:grid;width:100%;max-width:100%;height:auto;min-height:0;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:12px;align-items:stretch;overflow:visible;
+}
+#breakEvenPanel .metric{
+ display:flex;width:100%;min-width:0;height:auto;min-height:100px;
+ max-height:none;flex-direction:column;justify-content:center;align-items:flex-start;
+ gap:7px;padding:14px;overflow:visible;
+}
+#breakEvenPanel .metric small{
+ display:block;width:100%;height:auto;min-height:0;
+ line-height:1.4;white-space:normal;overflow-wrap:anywhere;
+}
+#breakEvenPanel .metric strong{
+ display:block;width:100%;height:auto;min-height:0;
+ line-height:1.25;white-space:normal;overflow-wrap:anywhere;
+ font-size:clamp(16px,1.5vw,22px);font-variant-numeric:tabular-nums;
+}
+#breakEvenPanel #beMessage{display:block;width:100%;height:auto;min-height:0;line-height:1.55}
+#breakEvenPanel #breakEvenChart{
+ display:block;width:100%;max-width:100%;height:auto;min-height:180px;
+ max-height:360px;aspect-ratio:1000/330;object-fit:contain;
+}
+#breakEvenPanel .actions{
+ display:flex;width:100%;height:auto;min-height:0;flex-wrap:wrap;
+ align-items:center;gap:10px;overflow:visible;
+}
+#breakEvenPanel .actions button{
+ flex:0 1 auto;max-width:100%;min-width:0;height:auto;min-height:42px;
+ white-space:normal;line-height:1.35;padding:10px 14px;
+}
+#breakEvenPanel #technicalTable{width:100%;min-width:700px;height:auto}
+#breakEvenPanel #technicalTable th,
+#breakEvenPanel #technicalTable td{height:auto;line-height:1.4;white-space:normal}
+#breakEvenPanel #technicalTable input,
+#breakEvenPanel #technicalTable select{min-height:34px;height:auto;padding:7px}
+#breakEvenPanel .finance-card>div[style*="overflow-x:auto"]{
+ display:block;width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;
+ -webkit-overflow-scrolling:touch;
+}
+body.sidebar-collapsed #breakEvenPanel{margin-left:112px!important}
+@media(max-width:850px){
+ #breakEvenPanel{
+  width:auto;max-width:none;margin:18px 14px 28px!important;
+  padding:16px;overflow:visible!important;
+ }
+ #breakEvenPanel .break-grid{grid-template-columns:minmax(0,1fr)}
+ #breakEvenPanel .finance-results{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #breakEvenPanel .finance-inputs{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:560px){
+ #breakEvenPanel{margin:12px 9px 22px!important;padding:13px;border-radius:16px}
+ #breakEvenPanel .finance-inputs{grid-template-columns:minmax(0,1fr);gap:7px}
+ #breakEvenPanel .finance-results{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #breakEvenPanel .metric{min-height:88px;padding:11px;gap:6px}
+ #breakEvenPanel .metric small{font-size:9px}
+ #breakEvenPanel .metric strong{font-size:16px}
+ #breakEvenPanel .actions{display:grid;grid-template-columns:minmax(0,1fr)}
+ #breakEvenPanel .actions button{width:100%;max-width:none}
+ #breakEvenPanel #breakEvenChart{min-height:145px;max-height:250px}
+}
+@media(max-width:360px){
+ #breakEvenPanel .finance-results{grid-template-columns:minmax(0,1fr)}
+ #breakEvenPanel .metric{min-height:70px}
+}
+@media print{
+ #breakEvenPanel{display:block!important;margin:0!important;padding:0!important;overflow:visible!important;box-shadow:none}
+ #breakEvenPanel .break-grid{grid-template-columns:1fr 1fr!important}
+ #breakEvenPanel .finance-results{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ #breakEvenPanel .finance-card,#breakEvenPanel .metric{break-inside:avoid}
+}
+
+
+/* Acceso directo a Emprendix */
+.external-app-btn{
+ display:inline-flex;align-items:center;justify-content:center;gap:9px;
+ min-height:42px;padding:10px 16px;border-radius:12px;
+ color:#fff!important;text-decoration:none!important;font-size:13px;font-weight:750;
+ background:linear-gradient(135deg,#16a68a,#087e75);
+ border:1px solid #ffffff35;box-shadow:0 6px 16px rgba(4,105,94,.28);
+ transition:transform .18s ease,box-shadow .18s ease,filter .18s ease;
+}
+.external-app-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.external-app-btn:hover{transform:translateY(-3px);filter:brightness(1.06);box-shadow:0 12px 24px rgba(4,105,94,.35)}
+.external-app-btn:focus-visible{outline:3px solid #f4a62c;outline-offset:3px}
+@media(max-width:560px){.top-actions .external-app-btn{width:100%}.top-actions{flex-wrap:wrap}}
+
+</style>
+</head>
+<body>
+<button id="sidebarToggle" class="sidebar-toggle no-print" type="button" onclick="toggleSidebar()" aria-label="Ocultar o mostrar menú" aria-expanded="true" title="Ocultar o mostrar menú">
+ <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+</button>
+<div id="sidebarBackdrop" class="sidebar-backdrop no-print" onclick="closeSidebar()" aria-hidden="true"></div>
+<aside id="sidebar" class="no-print">
+ <div class="brand"><div class="brand-mark">✦</div><div class="brand-text"><strong>EMPRENDE GASTRO</strong><small>Plataforma académica · V11</small></div></div>
+ <div class="nav-label">ESPACIO DE TRABAJO</div>
+ <button class="nav-btn active" onclick="navGo('step1',this)"><span class="nav-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v12h14V9M9 21v-7h6v7"/></svg></span><span>Inicio / Diagnóstico</span></button>
+ <button class="nav-btn" onclick="navGo('step2',this)"><span class="nav-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v2M12 19v2M3 12h2m14 0h2M5.6 5.6 7 7m10 10 1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4"/><path d="m12 7 1.6 3.4L17 12l-3.4 1.6L12 17l-1.6-3.4L7 12l3.4-1.6L12 7Z"/></svg></span><span>Ideas de negocio</span></button>
+ <button class="nav-btn" onclick="navGo('step3',this)"><span class="nav-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><span>Metodología y Canvas</span></button>
+ <button class="nav-btn" onclick="navGo('step4',this)"><span class="nav-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h7"/></svg></span><span>Proyecto profesional</span></button>
+ <button class="nav-btn" onclick="navGo('promptPanel',this)"><span class="nav-ico nav-ico-apa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2.8h8l4 4V21H6a2 2 0 0 1-2-2V4.8a2 2 0 0 1 2-2Z"/><path d="M14 2.8v4h4M8 11h8M8 14.5h4"/><path d="m15.5 18 1.1-3 1.1 3m-1.8-.9h1.4"/></svg><b>APA</b></span><span>Prompt para Word / APA</span></button>
+ <div class="nav-label">HERRAMIENTAS</div>
+ <button class="nav-btn" onclick="navGo('breakEvenPanel',this)"><span class="nav-ico nav-ico-finance"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 15h2v2H7zM11 12h2v5h-2zM15 9h2v8h-2zM7 8h2"/></svg></span><span>Calculadora financiera</span></button>
+ <button class="nav-btn" onclick="openAI()"><span class="nav-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z"/><path d="M8 10a4 4 0 0 1 8 0v2a4 4 0 0 1-8 0zM9 18l3-3 3 3"/></svg></span><span>Asistente IA</span></button>
+ <button class="nav-btn" onclick="readVisible()"><span class="nav-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="M17 9a5 5 0 0 1 0 6M19 5a10 10 0 0 1 0 14"/></svg></span><span>Leer contenido</span></button>
+ <button class="nav-btn" onclick="stopReading()"><span class="nav-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></span><span>Detener lectura</span></button>
+ <div class="sidebar-tip">Asistente académico para estudiantes de Gastronomía. Organiza tu idea, valida tu propuesta y desarrolla tu proyecto.</div>
+</aside>
+
+<header>
+  <div class="tag">Herramienta para estudiantes · Técnico Medio</div>
+  <h1>Emprende Gastro <span class="version-pill">V11.5 · PWA</span></h1>
+  <p>Ideas de negocio, metodologías de innovación y proyectos académicos profesionales.</p>
+  <div class="top-actions no-print">
+    <a id="emprendixLink" class="external-app-btn" href="https://emprendix.vrtybo.com/tabs/main-dashboard" target="_blank" rel="noopener noreferrer" aria-label="Abrir Emprendix en una nueva pestaña">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+      Abrir Emprendix
+    </a>
+    <button id="installAppBtn" class="install-btn hidden" onclick="installPWA()">＋ Instalar aplicación</button>
+    <button id="voiceRead" onclick="readVisible()">◖)) Leer en voz alta</button>
+    <button class="secondary" onclick="openAI()">✧ Consultar al asistente</button>
+  </div>
+</header>
+<main>
+  <div class="progress no-print"><span class="active" id="p1"></span><span id="p2"></span><span id="p3"></span></div>
+
+  <section class="panel" id="step1">
+    <h2>1. Cuéntanos tu idea y tu contexto</h2>
+    <p class="intro">Completa estos datos. No necesitas tener una idea definida; puedes empezar desde cero.</p>
+    <div class="grid">
+      <div><label for="student">Nombre del estudiante (opcional)</label><input id="student" placeholder="Escribe tu nombre"></div>
+      <div><label for="area">Área gastronómica de interés</label>
+        <select id="area">
+          <option value="">Selecciona un área</option>
+          <option>Inocuidad alimentaria, seguridad ocupacional y medio ambiente</option>
+          <option>Técnicas culinarias e historia de la gastronomía</option>
+          <option>Procedimientos básicos de repostería, pastelería y panadería</option>
+          <option>Informática aplicada a la gastronomía</option><option>Nutrición y dietética</option>
+          <option>Organización y gestión de alimentos y bebidas</option><option>Servicio de comedor, etiqueta y protocolo</option>
+          <option>Francés técnico aplicado a gastronomía</option><option>Gastronomía nacional</option>
+          <option>Repostería y pastelería</option><option>Gastronomía internacional</option><option>Panadería</option>
+          <option>Metodología de la investigación</option><option>Emprendimiento productivo</option>
+          <option>Cocina creativa</option><option>Bar y coctelería</option><option>Enología y maridaje</option>
+          <option>Eventos, banquetes y garnish</option><option>Marketing gastronómico</option>
+          <option>Industria y especialidades gastronómicas</option><option>Taller de modalidad de graduación</option>
+        </select>
+      </div>
+    </div>
+    <label for="need">¿Qué necesidad o problema observas en tu comunidad, barrio o unidad educativa?</label>
+    <textarea id="need" placeholder="Ejemplo: hay pocas opciones de meriendas económicas y nutritivas..."></textarea>
+    <label for="product">¿Qué producto o servicio te gustaría elaborar o mejorar? (opcional)</label>
+    <textarea id="product" placeholder="Ejemplo: panes, postres, almuerzos, bebidas, productos envasados..."></textarea>
+    <div class="grid">
+      <div><label for="resources">¿Qué recursos tienes disponibles?</label><textarea id="resources" placeholder="Ejemplo: horno, cocina, utensilios, frutas de temporada..."></textarea></div>
+      <div><label for="skills">¿Qué sabes hacer o qué técnica te gustaría aprender?</label><textarea id="skills" placeholder="Ejemplo: masas, decoración, fermentación, cocina..."></textarea></div>
+    </div>
+    <div class="grid">
+      <div>
+        <label for="methodology">Metodología para desarrollar el emprendimiento</label>
+        <select id="methodology" onchange="renderMethodologyIfVisible()">
+          <option value="Canvas">Modelo de negocios Canvas</option>
+          <option value="Design Thinking">Design Thinking</option>
+          <option value="Lean Startup">Lean Startup</option>
+        </select>
+      </div>
+      <div>
+        <label for="researchMethod">Metodología de investigación complementaria</label>
+        <select id="researchMethod">
+          <option value="Investigación descriptiva">Investigación descriptiva</option>
+          <option value="Investigación-acción">Investigación-acción</option>
+          <option value="Enfoque mixto">Enfoque mixto (cuantitativo y cualitativo)</option>
+          <option value="Estudio de mercado">Estudio de mercado</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="panel" style="background:#f8f9ff;border:1px solid #dfe3ff;border-radius:14px;margin-top:20px">
+      <h3>Documentos de apoyo del proyecto</h3>
+      <p class="intro">Sube documentos que el asistente debe tomar en cuenta: fichas técnicas, recetas, cotizaciones, diagnósticos, encuestas, reglamentos, apuntes o borradores del proyecto.</p>
+      <label for="supportFiles">Seleccionar documentos (puedes elegir varios)</label>
+      <input id="supportFiles" type="file" multiple accept=".docx,.xlsx,.xls,.pdf,.txt,.csv,.png,.jpg,.jpeg,.webp,.bmp">
+      <div class="actions no-print">
+        <button class="primary" type="button" onclick="processSupportFiles()">Leer documentos y extraer información</button>
+        <button class="outline" type="button" onclick="clearSupportFiles()">Quitar documentos</button>
+      </div>
+      <div id="supportStatus" class="finance-note" style="margin-top:12px">Todavía no se han cargado documentos.</div>
+      <label for="supportText">Contenido extraído (puedes revisarlo y corregirlo)</label>
+      <textarea id="supportText" rows="8" placeholder="Aquí aparecerá el texto extraído de tus documentos, fichas técnicas, PDF, imágenes y archivos de texto. También puedes pegar información manualmente."></textarea>
+      <p style="font-size:12px;color:#78809a;margin-top:8px">Formatos: Word .docx, Excel .xlsx/.xls, PDF, imágenes y texto .txt/.csv. Para Word antiguo .doc, guarda primero como .docx. La lectura de imágenes usa OCR y puede requerir internet. Los archivos se procesan en el navegador; no se envían automáticamente a un servidor.</p>
+    </div>
+
+    <label for="budget">Presupuesto inicial aproximado (Bs)</label><input id="budget" type="number" min="0" placeholder="Ejemplo: 300">
+    <div class="actions"><button class="primary" onclick="generateIdeas()">Generar ideas de emprendimiento</button></div>
+  </section>
+
+  <section class="panel hidden" id="step2">
+    <h2>2. Ideas sugeridas</h2>
+    <p class="intro">Estas propuestas son puntos de partida. Revísalas y elige la que puedas desarrollar con tus recursos.</p>
+    <div class="note" id="contextSummary"></div>
+    <div class="cards" id="ideas"></div>
+    <div class="actions no-print"><button class="secondary" onclick="backToForm()">Modificar mis respuestas</button></div>
+  </section>
+
+  <section class="panel hidden" id="step3">
+    <h2>3. Tu emprendimiento seleccionado</h2>
+    <p class="intro">La aplicación organiza una primera guía para comenzar tu proyecto. Completa y verifica los datos reales.</p>
+    <div id="chosenIdea" class="note"></div>
+    <label for="projectName">Nombre tentativo del emprendimiento</label><input id="projectName" placeholder="Escribe un nombre">
+    <label for="place">Lugar donde se desarrollará</label><input id="place" placeholder="Barrio, comunidad, unidad educativa o municipio">
+    <label for="target">¿A quién estará dirigido?</label><input id="target" placeholder="Ejemplo: estudiantes, familias, trabajadores...">
+    <label for="difference">¿Qué tendrá de diferente o innovador tu producto o servicio?</label><textarea id="difference" placeholder="Describe qué lo hará especial..."></textarea>
+    <div class="panel" style="background:#f8f8ff;border:1px solid #dfe3ff;border-radius:12px;margin-top:20px">
+      <h3 id="methodTitle">Metodología seleccionada</h3>
+      <p class="intro" id="methodDescription">Completa los componentes del modelo de negocios.</p>
+      <div id="methodFields" class="grid"></div>
+    </div>
+    <div class="actions no-print">
+      <button class="primary" onclick="buildProject()">Crear esquema y prompt APA</button>
+      <button class="secondary" onclick="backToIdeas()">Elegir otra idea</button>
+    </div>
+  </section>
+
+  <section class="panel hidden" id="step4">
+    <h2>4. Proyecto productivo y modelo de negocios</h2>
+    <p class="intro">Este borrador sirve como guía. El estudiante debe investigar, comprobar costos y completar la información de su contexto.</p>
+    <div id="projectOutput" class="output"></div>
+    <div class="actions no-print">
+      <button class="primary" onclick="copyProject()">Copiar esquema</button>
+      <button class="outline" onclick="makePrompt()">Generar prompt maestro APA</button>
+      <button class="secondary" onclick="window.print()">Imprimir / Guardar PDF</button>
+      <button class="secondary" onclick="startOver()">Nuevo emprendimiento</button>
+    </div>
+  </section>
+  <section class="panel hidden" id="promptPanel">
+    <h2>5. Prompt profesional para elaborar el proyecto en Word</h2>
+    <p class="intro">Antes de generar el prompt definitivo, carga o escribe el índice oficial de tu proyecto. La aplicación utilizará exactamente esos títulos y subtítulos para organizar el documento.</p>
+    <div class="finance-card" style="margin:16px 0">
+      <h3>1. Cargar estructura oficial: títulos y subtítulos</h3>
+      <p class="intro">Sube el documento o fotografía donde tu institución o docente establece el formato del proyecto. Puedes cargar Word, PDF, Excel, fotografías o texto. También puedes pegar o editar manualmente el índice.</p>
+      <label for="structureFile">Subir documento o imagen con títulos y subtítulos</label>
+      <input id="structureFile" type="file" accept=".docx,.pdf,.txt,.csv,.xlsx,.xls,.png,.jpg,.jpeg,.webp,.bmp">
+      <div class="actions no-print">
+        <button class="outline" onclick="extractProjectStructure()">Extraer títulos y subtítulos</button>
+        <button class="secondary" onclick="loadDefaultStructure()">Usar estructura base</button>
+      </div>
+      <div id="structureStatus" class="finance-note" style="margin-top:10px">Aún no se ha cargado una estructura. Puedes subir el formato institucional o pegarlo en el siguiente campo.</div>
+      <label for="projectStructure">Estructura del proyecto (editable)</label>
+      <textarea id="projectStructure" rows="18" placeholder="Pega aquí los títulos y subtítulos oficiales, respetando su numeración y orden."></textarea>
+      <p style="font-size:12px;color:#78809a">Formatos admitidos: Word .docx, PDF, Excel .xlsx/.xls, texto .txt/.csv e imágenes .jpg/.png/.webp. La estructura extraída es un borrador: revisa numeración, niveles y títulos antes de continuar. El sistema debe conservar literalmente los encabezados institucionales.</p>
+    </div>
+    <div class="actions no-print">
+      <button class="primary" onclick="generateFinalPrompt()">2. Generar prompt con esta estructura</button>
+    </div>
+    <h3>2. Prompt definitivo para editar o copiar</h3>
+    <div id="promptOutput" class="output">Primero carga o confirma la estructura del proyecto y luego pulsa “Generar prompt con esta estructura”.</div>
+    <div class="actions no-print">
+      <button class="primary" onclick="copyPrompt()">Copiar prompt completo</button>
+      <button class="outline" onclick="window.print()">Imprimir / Guardar PDF</button>
+      <button class="secondary" onclick="show('step4')">Volver al proyecto</button>
+    </div>
+  </section>
+</main>
+
+
+<section class="panel hidden" id="breakEvenPanel">
+ <h2>Calculadora financiera: punto de equilibrio</h2>
+ <p class="intro">Calcula cuántas unidades necesitas vender para cubrir todos tus costos, sin pérdida ni ganancia. Introduce tus datos reales en bolivianos (Bs).</p>
+ <div class="finance-note"><b>Cómo utilizarla:</b> registra los costos fijos del periodo (por ejemplo, un mes), el costo variable de producir una unidad y el precio de venta unitario. Usa el mismo periodo para costos y ventas.</div>
+
+ <div class="finance-card" style="margin-top:18px">
+  <h3>Ficha técnica de producción: cargar costos automáticamente</h3>
+  <p class="intro">Antes de calcular el punto de equilibrio, sube la ficha técnica de tu receta o producto. La aplicación sumará los ingredientes y otros costos variables, y calculará el costo por unidad según el rendimiento.</p>
+  <div class="finance-inputs">
+   <div><label for="beTechFile">Subir ficha técnica (Excel o CSV)</label><input id="beTechFile" type="file" accept=".xlsx,.xls,.csv,.txt" onchange="loadTechnicalSheet(event)"></div>
+   <div><label for="beYield">Rendimiento de la ficha (unidades obtenidas)</label><input id="beYield" type="number" min="1" step="1" value="1" oninput="applyTechnicalCosts()"></div>
+  </div>
+  <div class="actions no-print" style="margin-top:12px">
+   <button class="outline" onclick="downloadTechnicalTemplate()">Descargar plantilla de ficha técnica</button>
+   <button class="secondary" onclick="addTechnicalRow()">Añadir insumo</button>
+   <button class="primary" onclick="applyTechnicalCosts()">Pasar costos a la calculadora</button>
+  </div>
+  <div class="finance-note" id="techStatus" style="margin-top:12px">Sube una ficha técnica en formato Excel (.xlsx) o CSV. También puedes descargar la plantilla y completarla.</div>
+  <div style="overflow-x:auto;margin-top:12px">
+   <table id="technicalTable" style="width:100%;border-collapse:collapse;min-width:650px">
+    <thead><tr style="background:#eef1ff"><th style="padding:9px;text-align:left">Tipo</th><th style="padding:9px;text-align:left">Insumo / concepto</th><th style="padding:9px;text-align:right">Cantidad</th><th style="padding:9px;text-align:left">Unidad</th><th style="padding:9px;text-align:right">Costo unitario (Bs)</th><th style="padding:9px;text-align:right">Subtotal (Bs)</th><th class="no-print"></th></tr></thead>
+    <tbody id="technicalRows"><tr><td colspan="7" style="padding:12px;color:#77809c">Todavía no se ha cargado una ficha técnica.</td></tr></tbody>
+   </table>
+  </div>
+  <div class="finance-results">
+   <div class="metric"><small>Materia prima / lote</small><strong id="techIngredients">Bs 0,00</strong></div>
+   <div class="metric"><small>Envases / lote</small><strong id="techPackaging">Bs 0,00</strong></div>
+   <div class="metric"><small>Mano de obra variable / lote</small><strong id="techLabor">Bs 0,00</strong></div>
+   <div class="metric"><small>Otros variables / lote</small><strong id="techOther">Bs 0,00</strong></div>
+   <div class="metric green"><small>Costo variable por unidad</small><strong id="techUnitCost">Bs 0,00</strong></div>
+  </div>
+ </div>
+
+ <div class="break-grid" style="margin-top:18px">
+  <div class="finance-card">
+   <h3>1. Costos fijos del periodo</h3>
+   <div class="finance-inputs">
+    <div><label for="beRent">Alquiler (Bs)</label><input id="beRent" type="number" min="0" step="0.01" value="0" oninput="calculateBreakEven()"></div>
+    <div><label for="beSalary">Sueldos fijos (Bs)</label><input id="beSalary" type="number" min="0" step="0.01" value="0" oninput="calculateBreakEven()"></div>
+    <div><label for="beServices">Servicios básicos (Bs)</label><input id="beServices" type="number" min="0" step="0.01" value="0" oninput="calculateBreakEven()"></div>
+    <div><label for="beDepreciation">Depreciación (Bs)</label><input id="beDepreciation" type="number" min="0" step="0.01" value="0" oninput="calculateBreakEven()"></div>
+    <div><label for="beOtherFixed">Otros costos fijos (Bs)</label><input id="beOtherFixed" type="number" min="0" step="0.01" value="0" oninput="calculateBreakEven()"></div>
+   </div>
+  </div>
+  <div class="finance-card">
+   <h3>2. Costo variable por unidad</h3>
+   <div class="finance-inputs">
+    <div><label for="beIngredients">Materia prima (Bs/unidad)</label><input id="beIngredients" type="number" min="0" step="0.01" value="0" oninput="calculateBreakEven()"></div>
+    <div><label for="bePackaging">Envase y empaque (Bs/unidad)</label><input id="bePackaging" type="number" min="0" step="0.01" value="0" oninput="calculateBreakEven()"></div>
+    <div><label for="beLabor">Mano de obra variable (Bs/unidad)</label><input id="beLabor" type="number" min="0" step="0.01" value="0" oninput="calculateBreakEven()"></div>
+    <div><label for="beOtherVariable">Otros variables (Bs/unidad)</label><input id="beOtherVariable" type="number" min="0" step="0.01" value="0" oninput="calculateBreakEven()"></div>
+   </div>
+   <h3 style="margin-top:18px">3. Precio y ventas estimadas</h3>
+   <div class="finance-inputs">
+    <div><label for="bePrice">Precio de venta (Bs/unidad)</label><input id="bePrice" type="number" min="0" step="0.01" value="0" oninput="calculateBreakEven()"></div>
+    <div><label for="beForecast">Unidades que esperas vender</label><input id="beForecast" type="number" min="0" step="1" value="0" oninput="calculateBreakEven()"></div>
+   </div>
+  </div>
+ </div>
+ <div class="finance-results">
+  <div class="metric"><small>Costos fijos totales</small><strong id="beFixedTotal">Bs 0,00</strong></div>
+  <div class="metric"><small>Costo variable unitario</small><strong id="beVariableTotal">Bs 0,00</strong></div>
+  <div class="metric"><small>Margen de contribución</small><strong id="beContribution">Bs 0,00</strong></div>
+  <div class="metric orange"><small>Punto de equilibrio</small><strong id="beUnits">—</strong><small id="beUnitsLabel">unidades por periodo</small></div>
+  <div class="metric orange"><small>Ventas en equilibrio</small><strong id="beRevenue">—</strong></div>
+  <div class="metric green"><small>Resultado estimado</small><strong id="beProfit">Bs 0,00</strong></div>
+  <div class="metric"><small>Margen de contribución %</small><strong id="beContributionRate">—</strong></div>
+  <div class="metric"><small>Margen de seguridad</small><strong id="beSafety">—</strong></div>
+  <div class="metric"><small>Ventas estimadas</small><strong id="beForecastRevenue">Bs 0,00</strong></div>
+ </div>
+ <div id="beMessage" class="finance-note" style="margin-top:16px">Ingresa los costos y el precio de venta para calcular tu punto de equilibrio.</div>
+ <div class="finance-card" style="margin-top:18px">
+  <h3>Gráfico de punto de equilibrio</h3>
+  <p class="intro">La intersección entre ingresos totales y costos totales representa el punto de equilibrio.</p>
+  <canvas id="breakEvenChart" width="1000" height="330"></canvas>
+  <div class="actions no-print">
+   <button class="primary" onclick="calculateBreakEven()">Actualizar cálculo</button>
+   <button class="secondary" onclick="resetBreakEven()">Limpiar calculadora</button>
+   <button class="outline" onclick="printBreakEven()">Imprimir resultados</button>
+  </div>
+ </div>
+ <div class="finance-note" style="margin-top:16px">
+  <b>Fórmulas utilizadas</b><br>
+  Margen de contribución unitario = Precio de venta − Costo variable unitario.<br>
+  Punto de equilibrio (unidades) = Costos fijos ÷ Margen de contribución unitario.<br>
+  Ventas de equilibrio = Unidades de equilibrio × Precio de venta.<br>
+  Resultado estimado = (Unidades previstas × Margen de contribución) − Costos fijos.
+ </div>
+ <p class="intro" style="margin-top:12px;font-size:12px">Nota: el cálculo es una estimación simplificada. Supone precio y costo variable unitarios constantes, producción vendida en el periodo y costos fijos identificados correctamente. No sustituye una evaluación contable completa.</p>
+</section>
+
+<button id="aiLauncher" class="no-print" onclick="toggleAI()">✦ Asistente Gastro</button>
+<section id="aiPanel" class="no-print hidden" aria-label="Asistente conversacional">
+ <div class="ai-head">
+  <div><strong>✦ Asistente Emprende Gastro</strong><small><span class="ai-status"></span>Ayuda guiada · voz y texto</small></div>
+  <button onclick="toggleAI()">✕</button>
+ </div>
+ <div id="chatMessages">
+  <div class="chat-msg bot">¡Hola! Soy tu asistente de emprendimientos gastronómicos. Puedo ayudarte a descubrir ideas, analizar clientes, proponer innovaciones y orientar tu proyecto.\n\nEscribe tu consulta o usa el micrófono para dictarla.</div>
+ </div>
+ <div class="chat-tools">
+  <button onclick="readChat()">🔊 Leer respuesta</button>
+  <button onclick="stopReading()">■ Detener audio</button>
+  <button onclick="suggestIdeasInChat()">✧ Dame 5 ideas</button>
+ </div>
+ <div class="chat-compose">
+  <textarea id="chatInput" placeholder="Escribe tu pregunta o dicta con el micrófono..."></textarea>
+  <button id="chatMic" title="Dictar por voz" onclick="startDictation()">🎙</button>
+  <button id="chatSend" onclick="sendChat()">➤</button>
+ </div>
+ <div class="voice-hint">La dictación requiere un navegador compatible y permiso para usar el micrófono.</div>
+</section>
+<div id="micNotice" class="hidden no-print"></div>
+
+<footer>Emprende Gastro V11 · Generador educativo de ideas · Técnico Medio en Gastronomía</footer>
+<script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+let selectedIdea=null, ideasList=[];
+const $=id=>document.getElementById(id);
+function show(id){['step1','step2','step3','step4'].forEach(x=>$(x).classList.add('hidden'));$(id).classList.remove('hidden');
+['p1','p2','p3'].forEach((x,i)=>$(x).classList.toggle('active',i<({step1:1,step2:2,step3:3,step4:3}[id]||1)));}
+function generateIdeas(){
+ const area=$('area').value, need=$('need').value.trim();
+ if(!area||!need){alert('Selecciona un área y describe una necesidad o problema de tu contexto.');return;}
+ const product=$('product').value.trim(), resources=$('resources').value.trim(), skills=$('skills').value.trim();
+ const base=[
+  ['Producto práctico y económico','Crear una versión accesible, de tamaño individual o familiar, que responda a la necesidad identificada.','Precio accesible y presentación conveniente.'],
+  ['Producto con ingredientes locales','Aprovechar frutas, cereales, tubérculos u otros ingredientes disponibles en la zona para elaborar una propuesta gastronómica.','Uso de materia prima local y de temporada.'],
+  ['Alternativa saludable','Diseñar una opción con mejor equilibrio de ingredientes, porciones adecuadas y preparación higiénica.','Enfoque en alimentación consciente.'],
+  ['Producto transformado y conservado','Desarrollar un producto que permita aprovechar excedentes de materia prima mediante técnicas adecuadas de conservación.','Aprovechamiento y reducción de desperdicios.'],
+  ['Servicio por pedido','Ofrecer preparación personalizada para reuniones, meriendas, refrigerios o pequeños eventos.','Atención a pedidos y personalización.']
+ ];
+ const areaIdeas={
+ 'Inocuidad alimentaria, seguridad ocupacional y medio ambiente':['Diagnóstico higiénico para pequeños negocios gastronómicos','Kits de higiene para manipuladores','Aprovechamiento de residuos orgánicos','Capacitación en buenas prácticas de manipulación','Procesos seguros de conservación de alimentos'],
+ 'Técnicas culinarias e historia de la gastronomía':['Menú de degustación de técnicas tradicionales','Reinterpretación de platos históricos con ingredientes locales','Experiencias gastronómicas de cocina regional','Fondos, salsas y bases culinarias artesanales','Taller demostrativo de técnicas culinarias'],
+ 'Procedimientos básicos de repostería, pastelería y panadería':['Productos de masas batidas y quebradas','Postres individuales con frutas de temporada','Productos horneados con cereales locales','Pastelería personalizada','Bocaditos dulces y salados por pedido'],
+ 'Informática aplicada a la gastronomía':['Catálogo digital gastronómico para pedidos','Menú digital con código QR','Sistema de control de inventario y costos','Fichas técnicas digitales de recetas','Promoción digital para emprendimientos gastronómicos'],
+ 'Nutrición y dietética':['Refrigerios equilibrados para estudiantes','Menús saludables con productos regionales','Postres con porciones e ingredientes controlados','Almuerzos equilibrados para trabajadores','Meriendas nutritivas'],
+ 'Organización y gestión de alimentos y bebidas':['Planificación de menús y compras','Almuerzos por suscripción','Organización de compras para pequeños servicios de comida','Refrigerios para instituciones','Servicio de alimentación para grupos'],
+ 'Servicio de comedor, etiqueta y protocolo':['Servicio de mesas para eventos pequeños','Desayunos y meriendas con atención protocolar','Montaje de mesas temáticas','Atención gastronómica para reuniones','Degustación con protocolo básico'],
+ 'Francés técnico aplicado a gastronomía':['Taller de vocabulario francés para cocina','Menú temático francés bilingüe','Degustación de preparaciones francesas','Material digital de términos culinarios','Atención básica para eventos temáticos'],
+ 'Gastronomía nacional':['Platos regionales listos para llevar','Revalorización de recetas tradicionales','Menú degustación boliviano','Productos tradicionales en presentación individual','Cajas gastronómicas regionales'],
+ 'Repostería y pastelería':['Postres individuales creativos','Tortas personalizadas con sabores regionales','Repostería con frutas de temporada','Mesa dulce para eventos','Postres con ingredientes locales'],
+ 'Gastronomía internacional':['Comida internacional adaptada a ingredientes locales','Cajas de degustación de cocinas del mundo','Menú temático por país','Comida callejera internacional para llevar','Fusión gastronómica internacional y boliviana'],
+ 'Panadería':['Pan artesanal con cereales andinos','Panecillos para meriendas','Panadería de masa madre','Galletas y productos horneados','Línea de panes regionales'],
+ 'Metodología de la investigación':['Estudio de aceptación de un producto gastronómico','Investigación de preferencias de consumo','Prueba comparativa de formulaciones','Diagnóstico de necesidades alimentarias','Evaluación de conservación de un alimento'],
+ 'Emprendimiento productivo':['Producción y venta de un producto diferenciado','Servicio de alimentos por pedido','Transformación de materia prima local','Microemprendimiento de refrigerios','Línea gastronómica con identidad local'],
+ 'Cocina creativa':['Fusión de ingredientes tradicionales','Menú de autor con productos de temporada','Bocaditos creativos para eventos','Presentaciones innovadoras de platos regionales','Experiencia de degustación contemporánea'],
+ 'Bar y coctelería':['Bebidas de autor sin alcohol','Barra móvil de bebidas para eventos','Jarabes y concentrados artesanales','Carta de bebidas regionales','Bebidas refrescantes por pedido'],
+ 'Enología y maridaje':['Experiencia educativa de maridaje','Degustación con bebidas regionales sin alcohol','Guía de armonización de sabores','Asesoría de maridaje gastronómico','Cata sensorial educativa'],
+ 'Eventos, banquetes y garnish':['Bocaditos para eventos','Mesas temáticas para banquetes','Decoración comestible y garnish','Cajas de catering','Refrigerios para actos institucionales'],
+ 'Marketing gastronómico':['Fotografía y catálogo digital gastronómico','Marca y presentación comercial','Campaña promocional gastronómica','Contenido para redes sociales de restaurantes','Diseño de menús y promociones'],
+ 'Industria y especialidades gastronómicas':['Mermeladas y conservas regionales','Salsas y aderezos artesanales','Frutas y vegetales deshidratados','Productos gastronómicos con valor agregado','Aprovechamiento de subproductos alimentarios'],
+ 'Taller de modalidad de graduación':['Producto gastronómico innovador validado','Servicio gastronómico piloto','Prototipo de alimento transformado','Emprendimiento con estudio de mercado','Mejora de un proceso de producción alimentaria']
+ };
+ let names=areaIdeas[area]||['Producto gastronómico local','Producto práctico para llevar','Preparación especial por pedido','Alternativa saludable','Producto transformado artesanal'];
+ ideasList=names.map((name,i)=>({name,desc:base[i].slice(1).join(' '),innovation:base[i][2]}));
+ $('contextSummary').textContent='Área: '+area+' | Necesidad identificada: '+need;
+ $('ideas').innerHTML=ideasList.map((it,i)=>`<article class="idea" id="idea${i}"><small>Propuesta ${i+1}</small><h3>${escapeHTML(it.name)}</h3><p>${escapeHTML(it.desc)}</p><p><b>Posible innovación:</b> ${escapeHTML(it.innovation)}</p><button class="outline" onclick="chooseIdea(${i})">Elegir esta idea</button></article>`).join('');
+ show('step2');
+}
+const methodologyData={
+ Canvas:{
+  title:"Modelo de negocios Canvas",
+  description:"Completa los nueve bloques para explicar cómo funcionará y generará valor tu emprendimiento gastronómico.",
+  fields:[
+   ["socios","1. Socios clave","¿Quiénes pueden apoyar? Proveedores, productores, instituciones, aliados."],
+   ["activities","2. Actividades clave","¿Qué actividades son indispensables para producir y vender?"],
+   ["resourcesKey","3. Recursos clave","¿Qué equipos, utensilios, conocimientos, personal e insumos necesitas?"],
+   ["value","4. Propuesta de valor","¿Qué necesidad resuelve y por qué elegirían tu producto o servicio?"],
+   ["relationships","5. Relación con clientes","¿Cómo atenderás, fidelizarás y recibirás opiniones de tus clientes?"],
+   ["channels","6. Canales","¿Dónde y cómo promocionarás, venderás y entregarás el producto?"],
+   ["segments","7. Segmentos de clientes","¿Quiénes serán tus clientes principales?"],
+   ["costs","8. Estructura de costos","¿Cuáles serán tus principales costos fijos y variables?"],
+   ["revenue","9. Fuentes de ingresos","¿Cómo generarás ingresos? Venta por unidad, pedidos, paquetes, eventos."]
+  ]
+ },
+ "Design Thinking":{
+  title:"Metodología Design Thinking",
+  description:"Desarrolla una solución centrada en las personas. Registra evidencias y decisiones en cada etapa.",
+  fields:[
+   ["empathize","1. Empatizar","¿A quién afecta la necesidad? ¿Qué observaste o descubriste al conversar con posibles usuarios?"],
+   ["define","2. Definir","Formula con claridad el problema o necesidad desde el punto de vista del usuario."],
+   ["ideate","3. Idear","¿Qué soluciones posibles propusiste? ¿Por qué seleccionaste esta idea?"],
+   ["prototype","4. Prototipar","¿Qué producto de prueba, muestra, receta o servicio piloto elaborarás?"],
+   ["test","5. Evaluar y mejorar","¿Con quién probarás el prototipo? ¿Qué criterios y opiniones recogerás para mejorarlo?"]
+  ]
+ },
+ "Lean Startup":{
+  title:"Metodología Lean Startup",
+  description:"Comprueba la idea con pruebas pequeñas, mide la respuesta de los clientes y mejora antes de invertir más.",
+  fields:[
+   ["hypothesis","1. Hipótesis de valor","¿Qué supones que valorará el cliente de tu producto o servicio?"],
+   ["mvp","2. Producto mínimo viable","¿Cuál es la versión más sencilla que puedes elaborar para probar la idea?"],
+   ["metrics","3. Indicadores","¿Qué medirás? Unidades vendidas, aceptación, recompra, costo o satisfacción."],
+   ["experiment","4. Experimento","¿Cómo y durante cuánto tiempo probarás el producto con clientes reales?"],
+   ["learning","5. Aprendizaje y mejora","¿Qué resultado te hará mantener, modificar o descartar la propuesta?"]
+  ]
+ }
+};
+function renderMethodologyIfVisible(){if(!$('step3').classList.contains('hidden'))renderMethodology();}
+function renderMethodology(){
+ const key=$('methodology').value, data=methodologyData[key];
+ $('methodTitle').textContent=data.title;
+ $('methodDescription').textContent=data.description;
+ $('methodFields').innerHTML=data.fields.map(([id,label,hint])=>`<div><label for="mf_${id}">${label}</label><textarea id="mf_${id}" placeholder="${escapeHTML(hint)}"></textarea></div>`).join('');addFieldDictation();
+}
+function getMethodologyAnswers(){
+ const data=methodologyData[$('methodology').value];
+ return data.fields.map(([id,label])=>label+": "+(($('mf_'+id)?.value||'').trim()||'[Por desarrollar]')).join("\\n");
+}
+function chooseIdea(i){selectedIdea=ideasList[i];document.querySelectorAll('.idea').forEach(x=>x.classList.remove('selected'));$('idea'+i).classList.add('selected');
+ $('chosenIdea').innerHTML='<b>'+escapeHTML(selectedIdea.name)+'</b><br>'+escapeHTML(selectedIdea.desc);
+ $('projectName').value=selectedIdea.name;renderMethodology();show('step3');addFieldDictation();}
+function buildProject(){
+ if(!$('projectName').value.trim()||!$('place').value.trim()||!$('target').value.trim()){alert('Completa el nombre, el lugar y el público al que estará dirigido.');return;}
+ const area=$('area').value,student=$('student').value||'Estudiante',need=$('need').value,product=$('product').value||selectedIdea.name,resources=$('resources').value||'Por identificar',skills=$('skills').value||'Por fortalecer',budget=$('budget').value||'Por determinar';
+ const methodology=$('methodology').value, researchMethod=$('researchMethod').value, methodologyAnswers=getMethodologyAnswers();
+ const txt=`PROYECTO DE EMPRENDIMIENTO PRODUCTIVO – GASTRONOMÍA
+
+Estudiante: ${student}
+Nombre del emprendimiento: ${$('projectName').value}
+Área: ${area}
+Lugar: ${$('place').value}
+Público destinatario: ${$('target').value}
+
+1. INTRODUCCIÓN
+El presente emprendimiento productivo propone desarrollar ${product.toLowerCase()}, como una alternativa que busca responder a una necesidad identificada en el contexto. La propuesta se desarrollará en el área de ${area.toLowerCase()}, considerando los recursos disponibles y las características del público destinatario.
+
+2. PLANTEAMIENTO DEL EMPRENDIMIENTO PRODUCTIVO
+2.1. Diagnóstico del contexto productivo
+Necesidad o problema identificado: ${need}
+Recursos disponibles: ${resources}
+Conocimientos o habilidades: ${skills}
+Esta información debe ampliarse mediante observación, entrevistas o encuestas a posibles consumidores.
+
+2.2. Objetivos del emprendimiento
+2.2.1. Objetivo general
+Desarrollar un emprendimiento productivo gastronómico basado en ${selectedIdea.name.toLowerCase()}, para responder a una necesidad del contexto y promover una alternativa de producción responsable y viable.
+
+2.2.2. Objetivos específicos
+• Identificar las preferencias y necesidades de los posibles consumidores.
+• Diseñar y estandarizar la preparación del producto o servicio.
+• Determinar los insumos, equipos y costos necesarios para su elaboración.
+• Aplicar normas de higiene, inocuidad y seguridad durante la producción.
+• Evaluar la aceptación del producto mediante una prueba o consulta a consumidores.
+
+2.3. Justificación
+La propuesta se justifica por la necesidad identificada: ${need}. Su desarrollo permitirá aplicar conocimientos y técnicas gastronómicas, fortalecer capacidades emprendedoras y valorar los recursos disponibles en el entorno.
+
+3. DESARROLLO DEL EMPRENDIMIENTO PRODUCTIVO
+3.1. Localización
+Lugar previsto: ${$('place').value}. Describir las condiciones del espacio, acceso a servicios y cercanía al público destinatario.
+
+3.2. Análisis del mercado
+Público destinatario: ${$('target').value}. Investigar competidores, precios, preferencias, frecuencia de compra y demanda mediante encuestas u observación.
+
+3.3. Estrategia de promoción y distribución
+Definir nombre e imagen del producto, presentación, precio, medios de promoción y forma de entrega o venta. Considerar WhatsApp, redes sociales, recomendaciones y venta directa, según el contexto.
+
+3.4. Estructura organizacional
+Definir quién se encargará de producción, compras, higiene, costos, promoción, ventas y atención al cliente.
+
+3.5. Diseño del producto o servicio
+Idea seleccionada: ${selectedIdea.name}
+Descripción inicial: ${selectedIdea.desc}
+Innovación propuesta: ${$('difference').value||selectedIdea.innovation}
+Completar con receta estandarizada, ingredientes, cantidades, proceso, presentación, porción y vida útil cuando corresponda.
+
+3.6. Metodología de desarrollo del emprendimiento
+Metodología seleccionada: ${methodology}
+Metodología de investigación complementaria: ${researchMethod}
+${methodologyAnswers}
+Explicar cómo se aplicará cada etapa, qué actividades se realizarán, qué instrumentos se utilizarán y qué evidencias demostrarán su cumplimiento.
+
+3.7. Modelo de negocios
+Desarrollar el modelo ${methodology} con sus componentes y explicar cómo se conectan para crear, entregar y capturar valor. Si se seleccionó Canvas, presentar los nueve bloques en una tabla editable y analizar su coherencia. Si se seleccionó Design Thinking, documentar las cinco etapas y vincular la solución con las necesidades de los usuarios. Si se seleccionó Lean Startup, describir hipótesis, producto mínimo viable, experimento, indicadores y aprendizaje.
+
+4. VIABILIDAD Y SOSTENIBILIDAD
+4.1. Cálculo de inversiones
+Presupuesto inicial declarado: Bs ${budget}. Elaborar una lista real de equipos, utensilios, mobiliario y otros recursos, indicando cantidad, costo unitario y costo total.
+
+4.2. Costo de producción
+Calcular materia prima, mano de obra, servicios, envases y otros gastos. Determinar costo por lote y por unidad; luego establecer un precio de venta justificado. No utilizar valores estimados como si fueran cotizaciones reales.
+
+5. RESULTADOS
+Registrar los resultados de la prueba del producto o servicio: cantidad elaborada, personas consultadas, aceptación, observaciones, dificultades y mejoras realizadas.
+
+6. PROYECTO DE VIDA
+Explicar qué aprendizajes, capacidades y metas personales y profesionales se fortalecen con este emprendimiento.
+
+7. CONCLUSIONES Y RECOMENDACIONES
+Redactar conclusiones a partir de los resultados obtenidos y proponer recomendaciones para mejorar o dar continuidad al emprendimiento.
+
+BIBLIOGRAFÍA Y ANEXOS
+Incluir fuentes consultadas, encuestas, fotografías del proceso, fichas técnicas, cotizaciones y registros de costos.
+
+DOCUMENTOS DE APOYO APORTADOS POR EL ESTUDIANTE
+${$('supportText')?.value.trim()||'No se adjuntaron documentos de apoyo.'}
+
+IMPORTANTE: Este es un esquema inicial generado con tus respuestas. Debes investigar, comprobar la información, realizar pruebas y completar cada apartado con datos reales.`;
+ $('projectOutput').textContent=txt;show('step4');
+}
+function backToForm(){show('step1')}function backToIdeas(){show('step2')}function startOver(){selectedIdea=null;$('promptPanel').classList.add('hidden');$('step1').querySelectorAll('input,textarea').forEach(x=>x.value='');$('area').value='';show('step1')}
+function copyProject(){const t=$('projectOutput').textContent;navigator.clipboard?.writeText(t).then(()=>alert('Esquema copiado.')).catch(()=>alert('No se pudo copiar automáticamente. Puedes seleccionar y copiar el texto.'))}
+function defaultProjectStructure(){
+ return `1. INTRODUCCIÓN
+
+2. PLANTEAMIENTO DEL EMPRENDIMIENTO PRODUCTIVO
+2.1. Diagnóstico del contexto productivo
+2.2. Objetivos del emprendimiento
+2.2.1. Objetivo general
+2.2.2. Objetivos específicos
+2.2.3. Misión (opcional)
+2.2.4. Visión (opcional)
+2.3. Justificación
+
+3. DESARROLLO DEL EMPRENDIMIENTO PRODUCTIVO
+3.1. Localización
+3.2. Análisis del mercado
+3.3. Estrategia de promoción y distribución
+3.4. Estructura organizacional
+3.5. Diseño del producto o servicio
+3.6. Ciclo de producción o servicio (opcional)
+
+4. VIABILIDAD Y SOSTENIBILIDAD
+4.1. Cálculo de inversiones
+4.2. Costo de producción
+
+5. RESULTADOS
+
+6. PROYECTO DE VIDA
+
+7. CONCLUSIONES Y RECOMENDACIONES
+
+BIBLIOGRAFÍA
+
+ANEXOS`;
+}
+function makePrompt(){
+ if(!$('projectStructure').value.trim()){
+  $('projectStructure').value=defaultProjectStructure();
+  $('structureStatus').textContent='Se ha cargado la estructura base. Puedes reemplazarla con el índice oficial de tu institución o editar los títulos y subtítulos.';
+ }else{
+  $('structureStatus').textContent='Se conservará la estructura que cargaste o escribiste. Revísala antes de generar el prompt.';
+ }
+ $('promptOutput').textContent='Confirma o modifica la estructura y pulsa “Generar prompt con esta estructura”.';
+ $('promptPanel').classList.remove('hidden');
+ $('promptPanel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function loadDefaultStructure(){
+ $('projectStructure').value=defaultProjectStructure();
+ $('structureStatus').textContent='Estructura base restaurada. Puedes editarla antes de generar el prompt.';
+}
+async function extractProjectStructure(){
+ const file=$('structureFile').files?.[0];
+ if(!file){$('structureStatus').textContent='Selecciona un documento Word, PDF o texto.';return;}
+ $('structureStatus').textContent='Leyendo el documento…';
+ try{
+  const extracted=await extractSupportFile(file);
+  $('projectStructure').value=extracted;
+  $('structureStatus').textContent='Documento leído: '+file.name+'. Revisa que se hayan extraído correctamente todos los títulos, subtítulos y numeraciones.';
+ }catch(e){$('structureStatus').textContent='No se pudo leer el documento: '+(e.message||'formato no compatible');}
+}
+function generateFinalPrompt(){
+ if(!$('projectStructure').value.trim()){
+  alert('Carga, pega o selecciona primero los títulos y subtítulos del proyecto.');return;
+ }
+ const prompt=`PROMPT MAESTRO: PROYECTO DE EMPRENDIMIENTO PRODUCTIVO EN GASTRONOMÍA
+
+Actúa como asesor académico especializado en emprendimiento productivo, gastronomía e investigación aplicada en la formación técnica tecnológica de Bolivia. Elabora un documento académico de nivel profesional, con profundidad equivalente a una tesis técnica, original, coherente, argumentado y listo para organizar en Microsoft Word. No lo reduzcas a un resumen ni a una simple propuesta comercial.
+
+DATOS DEL PROYECTO
+Estudiante: ${$('student').value||'[Nombre del estudiante]'}
+Título tentativo: ${$('projectName').value}
+Área/asignatura: ${$('area').value}
+Idea seleccionada: ${selectedIdea?selectedIdea.name:'[Idea]'}
+Lugar: ${$('place').value}
+Público destinatario: ${$('target').value}
+Necesidad identificada: ${$('need').value}
+Producto o servicio: ${$('product').value|| (selectedIdea?selectedIdea.name:'[Por definir]')}
+Recursos disponibles: ${$('resources').value||'[Investigar]'}
+Habilidades técnicas: ${$('skills').value||'[Precisar]'}
+Presupuesto inicial referencial: Bs ${$('budget').value||'[Por determinar]'}
+Metodología de emprendimiento elegida: ${$('methodology').value}
+Metodología de investigación complementaria: ${$('researchMethod').value}
+Desarrollo aportado por el estudiante:
+${getMethodologyAnswers()}
+
+ESTRUCTURA OFICIAL Y OBLIGATORIA DEL PROYECTO
+UTILIZA ESTA ESTRUCTURA COMO ÍNDICE MAESTRO OBLIGATORIO. Reproduce exactamente todos los títulos y subtítulos, su numeración, jerarquía y orden. No elimines, renombres, combines, agregues ni reordenes encabezados principales o secundarios. Desarrolla contenido debajo de cada encabezado respetando su nivel. No sustituyas el índice cargado por una estructura genérica ni agregues capítulos por iniciativa propia. Si falta información para desarrollar un apartado, conserva el encabezado y escribe [DATO POR INVESTIGAR], indicando qué debe recopilarse. Los apartados preliminares (portada, resumen e índices) solo se incorporan antes del índice si el formato institucional lo permite; bibliografía y anexos se ubican donde lo indique el esquema entregado.
+
+${$('projectStructure').value.trim()||'[ESTRUCTURA NO PROPORCIONADA: solicitar al estudiante el índice oficial antes de redactar el documento.]'}
+
+INSTRUCCIONES ACADÉMICAS Y APA 7.ª EDICIÓN
+• Redacta en español académico claro, con coherencia entre problema, objetivos, actividades, producto y resultados.
+• Aplica APA 7.ª edición en citas y referencias; no inventes fuentes, autores, DOI, enlaces ni datos bibliográficos.
+• Prepara preliminares profesionales solo cuando el formato institucional lo permita: portada editable, resumen, palabras clave, índices y otros elementos requeridos.
+• Respeta de manera estricta los títulos, subtítulos, numeración, orden y denominaciones del índice institucional cargado por el estudiante. Desarrolla todos los apartados, sin sustituir la estructura solicitada por otra estructura genérica. Si el formato institucional contradice una recomendación general de APA, prioriza la estructura institucional y aplica APA 7 en citas, referencias, tablas y figuras en lo que sea compatible.
+• Incluye tabla de contenido actualizable, numeración de páginas, tablas y figuras con títulos y notas cuando corresponda.
+• Configuración sugerida para Word: papel A4; márgenes de 2,54 cm; Times New Roman 12 o Arial 11; interlineado doble; alineación izquierda; sangría de primera línea de 1,27 cm. Ajusta los elementos especiales conforme a APA 7.
+• Adapta el contenido al área gastronómica seleccionada. Incluye, cuando corresponda, receta estandarizada o ficha técnica, ingredientes, cantidades, rendimiento, procedimiento, equipos, higiene, inocuidad, conservación, presentación y control de calidad.
+• Desarrolla el análisis de mercado con instrumentos aplicables: encuesta, entrevista u observación. Propón preguntas y explica a quiénes se aplicarán.
+• Desarrolla obligatoriamente la metodología de emprendimiento elegida (${ $('methodology').value }): si es Canvas, explica y completa los nueve bloques (socios clave, actividades clave, recursos clave, propuesta de valor, relaciones con clientes, canales, segmentos de clientes, estructura de costos y fuentes de ingresos); si es Design Thinking, desarrolla empatizar, definir, idear, prototipar y evaluar, con actividades, instrumentos y evidencias por etapa; si es Lean Startup, desarrolla hipótesis, producto mínimo viable, experimento, métricas y aprendizaje/iteración.
+• Incluye el modelo de negocios correspondiente como apartado propio, con tabla editable y análisis de coherencia entre sus componentes. No confundas el modelo Canvas con una metodología de investigación.
+• Explica la metodología de investigación complementaria seleccionada, su enfoque, tipo, técnicas, instrumentos, población o participantes y procedimiento, justificando su pertinencia.
+• Incluye tablas editables para inversión, materia prima, costos directos e indirectos, costo por lote, costo unitario y determinación razonada del precio de venta. Expresa los montos en bolivianos (Bs).
+• Considera viabilidad económica, técnica, comercial, social y ambiental; incluye reducción de desperdicios y uso responsable de recursos.
+• Explica cómo realizar una prueba piloto y medir la aceptación del producto o servicio.
+
+REGLAS PARA NO INVENTAR INFORMACIÓN
+No inventes cotizaciones, precios actuales, resultados de encuestas, porcentajes, permisos, demanda ni datos del lugar. Distingue los datos entregados de los supuestos. Cuando falte información escribe [DATO POR INVESTIGAR] y recomienda cómo obtenerla. No presentes resultados futuros como si ya se hubieran ejecutado.
+
+ENTREGABLE
+Desarrolla todos los apartados con contenido suficiente, no entregues solamente un índice. Incluye tablas editables y referencias verificables en APA 7. Al final añade una lista de datos que el estudiante debe completar, instrumentos de recolección de información y anexos sugeridos. El resultado debe poder copiarse y editarse en Word. No afirmes que tiene aprobación oficial.`;
+ $('promptOutput').textContent=prompt;
+ $('promptPanel').classList.remove('hidden');
+ $('promptPanel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function copyPrompt(){
+ const t=$('promptOutput').textContent;
+ navigator.clipboard?.writeText(t).then(()=>alert('Prompt maestro copiado.')).catch(()=>alert('Selecciona el texto y cópialo manualmente.'));
+}
+
+
+
+let technicalItems=[];
+function downloadTechnicalTemplate(){
+ const rows=[
+  ['tipo','insumo','cantidad','unidad','costo_unitario'],
+  ['materia prima','Harina','1','kg','8.50'],
+  ['materia prima','Azúcar','0.5','kg','7.00'],
+  ['envase','Bolsa o recipiente','10','unidad','0.40'],
+  ['mano de obra','Trabajo directo del lote','1','lote','25.00'],
+  ['otros','Gas u otros variables del lote','1','lote','5.00']
+ ];
+ const csv=rows.map(r=>r.join(';')).join('\n');
+ const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
+ const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='plantilla_ficha_tecnica_costos.csv';a.click();URL.revokeObjectURL(url);
+}
+function normalizeType(t){
+ const x=String(t||'materia prima').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+ if(x.includes('envase')||x.includes('empaque'))return 'envase';
+ if(x.includes('mano')||x.includes('labor'))return 'mano de obra';
+ if(x.includes('otro'))return 'otros';
+ return 'materia prima';
+}
+function parseCSV(text){
+ const lines=text.replace(/^\ufeff/,'').split(/\r?\n/).filter(x=>x.trim());
+ const delim=(lines[0].match(/;/g)||[]).length>(lines[0].match(/,/g)||[]).length?';':',';
+ return lines.map(line=>{
+  const out=[];let cur='',quoted=false;
+  for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'&&line[i+1]==='"'&&quoted){cur+='"';i++;}else if(ch==='"'){quoted=!quoted;}else if(ch===delim&&!quoted){out.push(cur.trim());cur='';}else cur+=ch;}
+  out.push(cur.trim());return out;
+ });
+}
+function rowsToTechnicalItems(rows){
+ if(!rows.length)return [];
+ const header=rows[0].map(x=>String(x||'').toLowerCase().trim());
+ const find=(names,def)=>{for(const n of names){const i=header.findIndex(h=>h.includes(n));if(i>=0)return i;}return def;};
+ const ti=find(['tipo','categoria','tipo de costo'],0),ni=find(['insumo','ingrediente','concepto','producto'],1),qi=find(['cantidad','cant'],2),ui=find(['unidad'],3),ci=find(['costo_unitario','costo unitario','precio unitario','precio'],4);
+ return rows.slice(1).filter(r=>r.some(x=>String(x||'').trim())).map(r=>({
+  type:normalizeType(r[ti]),name:String(r[ni]||'Insumo').trim(),qty:parseFloat(String(r[qi]||'0').replace(',','.'))||0,
+  unit:String(r[ui]||'unidad'),cost:parseFloat(String(r[ci]||'0').replace(',','.'))||0
+ }));
+}
+async function loadTechnicalSheet(event){
+ const file=event.target.files?.[0];if(!file)return;
+ try{
+  let rows;
+  const ext=file.name.toLowerCase().split('.').pop();
+  if(ext==='csv'||ext==='txt')rows=parseCSV(await file.text());
+  else if(window.XLSX){const data=await file.arrayBuffer();const wb=XLSX.read(data,{type:'array'});rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});}
+  else { $('techStatus').textContent='No se pudo cargar Excel porque no está disponible la biblioteca de lectura. Puedes subir la ficha como CSV o conectarte a internet e intentarlo nuevamente.';return;}
+  technicalItems=rowsToTechnicalItems(rows);renderTechnicalRows();
+  $('techStatus').textContent='Ficha cargada: '+file.name+'. Revisa los datos, el rendimiento y los subtotales antes de pasar los costos a la calculadora.';
+  applyTechnicalCosts();
+ }catch(err){$('techStatus').textContent='No se pudo leer el archivo. Verifica que sea una ficha Excel o CSV válida.';}
+}
+function addTechnicalRow(){technicalItems.push({type:'materia prima',name:'Nuevo insumo',qty:1,unit:'unidad',cost:0});renderTechnicalRows();applyTechnicalCosts();}
+function renderTechnicalRows(){
+ const body=$('technicalRows');
+ if(!technicalItems.length){body.innerHTML='<tr><td colspan="7" style="padding:12px;color:#77809c">No hay insumos registrados.</td></tr>';return;}
+ body.innerHTML=technicalItems.map((it,i)=>`<tr>
+ <td><select onchange="updateTechnicalItem(${i},'type',this.value)"><option value="materia prima" ${it.type==='materia prima'?'selected':''}>Materia prima</option><option value="envase" ${it.type==='envase'?'selected':''}>Envase</option><option value="mano de obra" ${it.type==='mano de obra'?'selected':''}>Mano de obra</option><option value="otros" ${it.type==='otros'?'selected':''}>Otros</option></select></td>
+ <td><input value="${escapeHTML(it.name)}" onchange="updateTechnicalItem(${i},'name',this.value)"></td>
+ <td><input type="number" min="0" step="0.001" value="${it.qty}" onchange="updateTechnicalItem(${i},'qty',this.value)"></td>
+ <td><input value="${escapeHTML(it.unit)}" onchange="updateTechnicalItem(${i},'unit',this.value)"></td>
+ <td><input type="number" min="0" step="0.01" value="${it.cost}" onchange="updateTechnicalItem(${i},'cost',this.value)"></td>
+ <td style="text-align:right;font-weight:700">${money(it.qty*it.cost)}</td>
+ <td class="no-print"><button onclick="removeTechnicalItem(${i})">Quitar</button></td></tr>`).join('');
+}
+function updateTechnicalItem(i,key,value){if(!technicalItems[i])return;technicalItems[i][key]=['qty','cost'].includes(key)?Math.max(0,parseFloat(value)||0):value;renderTechnicalRows();applyTechnicalCosts();}
+function removeTechnicalItem(i){technicalItems.splice(i,1);renderTechnicalRows();applyTechnicalCosts();}
+function applyTechnicalCosts(){
+ const sums={'materia prima':0,'envase':0,'mano de obra':0,'otros':0};
+ technicalItems.forEach(it=>sums[it.type]=(sums[it.type]||0)+(Number(it.qty)||0)*(Number(it.cost)||0));
+ const yieldQty=Math.max(1,parseFloat($('beYield')?.value)||1);
+ const ingredient=sums['materia prima']/yieldQty,pack=sums.envase/yieldQty,labor=sums['mano de obra']/yieldQty,other=sums.otros/yieldQty;
+ $('techIngredients').textContent=money(sums['materia prima']);$('techPackaging').textContent=money(sums.envase);
+ $('techLabor').textContent=money(sums['mano de obra']);$('techOther').textContent=money(sums.otros);
+ $('techUnitCost').textContent=money(ingredient+pack+labor+other);
+ $('beIngredients').value=ingredient.toFixed(2);$('bePackaging').value=pack.toFixed(2);
+ $('beLabor').value=labor.toFixed(2);$('beOtherVariable').value=other.toFixed(2);
+ if(typeof calculateBreakEven==='function')calculateBreakEven();
+}
+
+
+async function processSupportFiles(){
+ const files=[...($('supportFiles').files||[])];if(!files.length){$('supportStatus').textContent='Selecciona uno o más documentos primero.';return;}
+ const status=$('supportStatus');let outputs=[];
+ for(let i=0;i<files.length;i++){
+  const file=files[i];status.textContent='Procesando '+(i+1)+' de '+files.length+': '+file.name+'…';
+  try{
+   const text=await extractSupportFile(file);
+   outputs.push('===== ARCHIVO: '+file.name+' =====\n'+(text.trim()||'[No se pudo extraer texto. Puede ser un documento escaneado o protegido.]'));
+  }catch(err){outputs.push('===== ARCHIVO: '+file.name+' =====\n[No se pudo leer este archivo: '+(err.message||'formato no compatible')+']');}
+ }
+ const previous=$('supportText').value.trim();
+ $('supportText').value=(previous?previous+'\n\n':'')+outputs.join('\n\n');
+ status.textContent='Proceso terminado. Se revisaron '+files.length+' archivo(s). Comprueba el texto extraído y corrige posibles errores antes de generar el proyecto.';
+}
+async function extractSupportFile(file){
+ const ext=file.name.toLowerCase().split('.').pop();
+ if(ext==='txt')return await file.text();
+ if(ext==='csv')return await file.text();
+ if(ext==='docx'){
+  if(!window.mammoth)throw new Error('No se cargó el lector de Word. Revisa tu conexión a internet.');
+  const result=await mammoth.extractRawText({arrayBuffer:await file.arrayBuffer()});return result.value;
+ }
+ if(ext==='xlsx'||ext==='xls'){
+  if(!window.XLSX)throw new Error('No se cargó el lector de Excel. Revisa tu conexión a internet.');
+  const wb=XLSX.read(await file.arrayBuffer(),{type:'array'});let out=[];
+  wb.SheetNames.forEach(name=>{out.push('HOJA: '+name);out.push(XLSX.utils.sheet_to_csv(wb.Sheets[name]));});
+  return out.join('\n\n');
+ }
+ if(ext==='pdf'){
+  if(!window.pdfjsLib)throw new Error('No se cargó el lector PDF. Revisa tu conexión a internet.');
+  const pdfjs=window.pdfjsLib;pdfjs.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  const pdf=await pdfjs.getDocument({data:await file.arrayBuffer()}).promise;let pages=[];
+  for(let n=1;n<=pdf.numPages;n++){const page=await pdf.getPage(n);const content=await page.getTextContent();pages.push('PÁGINA '+n+'\n'+content.items.map(x=>x.str).join(' '));}
+  return pages.join('\n\n');
+ }
+ if(['png','jpg','jpeg','webp','bmp'].includes(ext)){
+  if(!window.Tesseract)throw new Error('No se cargó el OCR. Revisa tu conexión a internet.');
+  const result=await Tesseract.recognize(file,'spa',{logger:m=>{if(m.status==='recognizing text')$('supportStatus').textContent='Reconociendo texto de la imagen: '+Math.round((m.progress||0)*100)+'%';}});
+  return result.data.text;
+ }
+ throw new Error('Formato no admitido');
+}
+function clearSupportFiles(){
+ $('supportFiles').value='';$('supportText').value='';$('supportStatus').textContent='Documentos quitados. Puedes cargar otros archivos.';
+}
+
+function money(v){return 'Bs '+Number(v||0).toLocaleString('es-BO',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function val(id){const n=parseFloat($(id)?.value);return Number.isFinite(n)&&n>0?n:0;}
+function calculateBreakEven(){
+ const fixed=val('beRent')+val('beSalary')+val('beServices')+val('beDepreciation')+val('beOtherFixed');
+ const variable=val('beIngredients')+val('bePackaging')+val('beLabor')+val('beOtherVariable');
+ const price=val('bePrice'), forecast=val('beForecast'), contribution=price-variable;
+ $('beFixedTotal').textContent=money(fixed);
+ $('beVariableTotal').textContent=money(variable);
+ $('beContribution').textContent=money(contribution);
+ $('beForecastRevenue').textContent=money(price*forecast);
+ $('beContributionRate').textContent=price>0?(contribution/price*100).toLocaleString('es-BO',{maximumFractionDigits:2})+'%':'—';
+ const profit=contribution*forecast-fixed;
+ $('beProfit').textContent=money(profit);
+ $('beProfit').parentElement.className='metric '+(profit>0?'green':profit<0?'red':'');
+ if(price<=variable||price===0){
+  $('beUnits').textContent='No calculable';$('beRevenue').textContent='—';$('beSafety').textContent='—';
+  $('beMessage').textContent=price===0?'Ingresa un precio de venta mayor que cero.':'El precio de venta debe ser mayor que el costo variable por unidad. En caso contrario, cada unidad vendida no contribuye a cubrir los costos fijos.';
+  drawBreakEvenChart(fixed,variable,price,0,forecast);return;
+ }
+ const raw=fixed/contribution, units=Math.ceil(raw), revenue=units*price;
+ $('beUnits').textContent=units.toLocaleString('es-BO')+' unidades';
+ $('beRevenue').textContent=money(revenue);
+ const safety=forecast>0?(forecast-units)/forecast*100:null;
+ $('beSafety').textContent=safety===null?'—':safety.toLocaleString('es-BO',{maximumFractionDigits:1})+'%';
+ if(fixed===0){$('beMessage').textContent='No hay costos fijos registrados: el punto de equilibrio contable es 0 unidades, siempre que el precio cubra el costo variable.';}
+ else if(forecast>=units){$('beMessage').textContent='Con la proyección indicada alcanzarías o superarías el punto de equilibrio. Debes vender al menos '+units+' unidades en el periodo para cubrir los costos estimados.';}
+ else{$('beMessage').textContent='Con la proyección indicada todavía no alcanzarías el punto de equilibrio. Te faltarían '+(units-forecast)+' unidades para cubrir los costos estimados.';}
+ drawBreakEvenChart(fixed,variable,price,raw,forecast);
+}
+function drawBreakEvenChart(fixed,variable,price,be,forecast){
+ const c=$('breakEvenChart');if(!c)return;const ctx=c.getContext('2d'),w=c.width,h=c.height;
+ ctx.clearRect(0,0,w,h);const left=70,right=30,top=22,bottom=55,pw=w-left-right,ph=h-top-bottom;
+ const maxQ=Math.max(10,Math.ceil(Math.max((be||0)*1.5,forecast*1.2,10)/10)*10);
+ const maxY=Math.max(1,fixed+Math.max(price,variable)*maxQ)*1.12;
+ const X=q=>left+q/maxQ*pw,Y=v=>top+ph-v/maxY*ph;
+ ctx.strokeStyle='#e8ebf4';ctx.lineWidth=1;ctx.fillStyle='#69718c';ctx.font='13px Arial';
+ for(let i=0;i<=5;i++){const y=top+ph*i/5;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(w-right,y);ctx.stroke();ctx.fillText((maxY*(5-i)/5).toFixed(0),8,y+4);}
+ for(let i=0;i<=5;i++){const q=maxQ*i/5,x=X(q);ctx.beginPath();ctx.moveTo(x,top);ctx.lineTo(x,top+ph);ctx.stroke();ctx.fillText(Math.round(q),x-8,h-27);}
+ ctx.strokeStyle='#5368f5';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(X(0),Y(0));ctx.lineTo(X(maxQ),Y(price*maxQ));ctx.stroke();
+ ctx.strokeStyle='#f39a25';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(X(0),Y(fixed));ctx.lineTo(X(maxQ),Y(fixed+variable*maxQ));ctx.stroke();
+ ctx.fillStyle='#303f91';ctx.font='bold 14px Arial';ctx.fillText('Ingresos',w-170,top+16);
+ ctx.fillStyle='#f39a25';ctx.fillText('Costos totales',w-170,top+36);
+ ctx.fillStyle='#69718c';ctx.font='12px Arial';ctx.fillText('Unidades vendidas',w/2-45,h-7);
+ ctx.save();ctx.translate(18,h/2+35);ctx.rotate(-Math.PI/2);ctx.fillText('Bolivianos (Bs)',0,0);ctx.restore();
+ if(price>variable&&price>0&&fixed>0&&be<=maxQ){
+  ctx.fillStyle='#e84d56';ctx.beginPath();ctx.arc(X(be),Y(price*be),7,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='#e84d56';ctx.setLineDash([5,5]);ctx.beginPath();ctx.moveTo(X(be),Y(price*be));ctx.lineTo(X(be),top+ph);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#c43c3c';ctx.font='bold 13px Arial';ctx.fillText('PE: '+Math.ceil(be)+' unidades',Math.min(X(be)+10,w-200),Math.max(top+16,Y(price*be)-12));
+ }
+}
+function resetBreakEven(){
+ ['beRent','beSalary','beServices','beDepreciation','beOtherFixed','beIngredients','bePackaging','beLabor','beOtherVariable','bePrice','beForecast'].forEach(id=>$(id).value=0);
+ calculateBreakEven();
+}
+function printBreakEven(){window.print();}
+
+function navGo(id,btn){
+ const el=$(id);
+ if(!el){openAI();return;}
+ if(id==='breakEvenPanel')calculateBreakEven();
+ if(el.classList.contains('hidden'))el.classList.remove('hidden');
+ el.scrollIntoView({behavior:'smooth',block:'start'});
+ document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+ if(btn)btn.classList.add('active');
+}
+function toggleAI(){$('aiPanel').classList.toggle('hidden');if(!$('aiPanel').classList.contains('hidden'))$('chatInput').focus();}
+function openAI(){$('aiPanel').classList.remove('hidden');$('chatInput').focus();}
+function addChat(text,who='bot'){
+ const d=document.createElement('div');d.className='chat-msg '+who;d.textContent=text;$('chatMessages').appendChild(d);$('chatMessages').scrollTop=$('chatMessages').scrollHeight;return d;
+}
+function getVoiceApi(){return window.SpeechRecognition||window.webkitSpeechRecognition;}
+function startDictation(){
+ const SR=getVoiceApi();
+ if(!SR){showMicNotice('Tu navegador no ofrece dictado por voz. Prueba Chrome actualizado.');return;}
+ const rec=new SR();rec.lang='es-BO';rec.interimResults=true;rec.continuous=false;
+ showMicNotice('Te escucho… habla ahora.');
+ rec.onresult=e=>{let t='';for(let i=e.resultIndex;i<e.results.length;i++)t+=e.results[i][0].transcript;$('chatInput').value=t;};
+ rec.onerror=e=>showMicNotice('No se pudo usar el micrófono: '+e.error);
+ rec.onend=()=>setTimeout(()=> $('micNotice').classList.add('hidden'),1800);
+ try{rec.start();}catch(e){showMicNotice('No se pudo iniciar el micrófono.');}
+}
+function showMicNotice(t){$('micNotice').textContent=t;$('micNotice').classList.remove('hidden');}
+function speakText(t){
+ if(!('speechSynthesis' in window)){showMicNotice('La lectura en voz alta no está disponible en este navegador.');return;}
+ speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='es-BO';u.rate=0.96;u.pitch=1;speechSynthesis.speak(u);
+}
+function stopReading(){if('speechSynthesis' in window)speechSynthesis.cancel();}
+function readChat(){const nodes=[...document.querySelectorAll('#chatMessages .chat-msg.bot')];if(nodes.length)speakText(nodes[nodes.length-1].textContent);}
+function readVisible(){
+ const active=['step1','step2','step3','step4','promptPanel'].map($).find(el=>el&&!el.classList.contains('hidden'));
+ if(active)speakText(active.innerText);else speakText(document.querySelector('main')?.innerText||'Emprende Gastro');
+}
+function ideaResponse(q){
+ const area=$('area')?.value||'gastronomía';
+ const need=$('need')?.value||'una necesidad de consumidores de la comunidad';
+ const audience=$('target')?.value||'estudiantes, familias y consumidores locales';
+ const ideas=ideasList?.length?ideasList.slice(0,5).map(x=>x.name):[
+ 'Productos gastronómicos con ingredientes locales','Refrigerios prácticos y equilibrados','Postres individuales por pedido','Conservas y salsas artesanales','Servicio de catering para eventos pequeños'];
+ return 'Cinco ideas iniciales para '+area+':\n\n'+ideas.map((n,i)=>(i+1)+'. '+n+'\nPropuesta de valor: ofrecer una alternativa diferenciada, elaborada con control de calidad, presentación atractiva y precio que deberá validarse.\nMercado objetivo: '+audience+'.').join('\n\n')+'\n\nPara priorizarlas, compara demanda real, inversión, disponibilidad de insumos, competencia y capacidad técnica. La necesidad registrada es: '+need+'.';
+}
+function assistantAnswer(q){
+ const l=q.toLowerCase();
+ if(/cinco|5 ideas|ideas de negocio|gener.*idea|emprend/.test(l))return ideaResponse(q);
+ if(/canvas|modelo de negocio/.test(l))return 'Para tu emprendimiento gastronómico, el Modelo Canvas organiza nueve bloques: segmentos de clientes, propuesta de valor, canales, relación con clientes, fuentes de ingresos, recursos clave, actividades clave, socios clave y estructura de costos. Completa cada bloque con información comprobable y verifica que los costos e ingresos sean coherentes.';
+ if(/design thinking|empat/.test(l))return 'Design Thinking se desarrolla en cinco etapas: 1) Empatizar con los consumidores mediante entrevistas y observación; 2) Definir el problema concreto; 3) Idear varias soluciones; 4) Prototipar una versión de prueba del alimento o servicio; 5) Evaluar con usuarios, registrar opiniones y mejorar. Conserva evidencias de cada etapa.';
+ if(/lean startup|producto mínimo|mvp/.test(l))return 'Lean Startup propone formular hipótesis, crear un producto mínimo viable, probarlo con clientes reales, medir resultados y aprender para ajustar la propuesta. En gastronomía puedes elaborar un lote pequeño, medir aceptación, costo por unidad e intención de recompra antes de invertir a mayor escala.';
+ if(/costo|precio|inversi/.test(l))return 'Para estimar costos, registra cantidades y precios reales de materia prima, envases, mano de obra, energía y otros gastos. Calcula costo total del lote y divide entre unidades obtenidas para hallar el costo unitario. Luego define el precio considerando margen, competencia y disposición de pago. No uses cotizaciones inventadas.';
+ if(/tesis|apa|word|prompt/.test(l))return 'Tu proyecto debe incluir portada, resumen, índice, introducción, diagnóstico, problema, objetivos, justificación, antecedentes y fundamentación, metodología, desarrollo del emprendimiento, modelo de negocios, mercado, producción, inversión, costos, resultados, conclusiones, recomendaciones, referencias y anexos. Usa APA 7.ª edición para citas y referencias. Puedes generar el prompt desde el botón “Generar prompt maestro APA” al completar tu proyecto.';
+ return 'Puedo orientarte con ideas gastronómicas, propuesta de valor, mercado objetivo, Canvas, Design Thinking, Lean Startup, investigación, costos y estructura académica. Cuéntame qué producto o necesidad tienes en mente y en qué área gastronómica quieres trabajar.';
+}
+function sendChat(){
+ const q=$('chatInput').value.trim();if(!q)return;
+ addChat(q,'user');$('chatInput').value='';
+ const response=assistantAnswer(q);addChat(response,'bot');
+}
+function suggestIdeasInChat(){addChat('Genera cinco ideas de negocio gastronómico innovadoras, con propuesta de valor y mercado objetivo.','user');addChat(ideaResponse('cinco ideas'),'bot');}
+$('chatInput')?.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}});
+
+
+function addFieldDictation(){
+ document.querySelectorAll('#step1 textarea,#step1 input:not([type=number]),#step3 textarea,#step3 input').forEach(el=>{
+  if(el.dataset.voiceReady)return;el.dataset.voiceReady='1';
+  const wrap=document.createElement('div');wrap.className='field-voice';el.parentNode.insertBefore(wrap,el);wrap.appendChild(el);
+  const b=document.createElement('button');b.type='button';b.className='field-mic no-print';b.textContent='🎙';b.title='Dictar en este campo';
+  b.onclick=()=>dictateInto(el);wrap.appendChild(b);
+ });
+}
+function dictateInto(target){
+ const SR=getVoiceApi();if(!SR){showMicNotice('Dictado por voz no disponible en este navegador.');return;}
+ const rec=new SR();rec.lang='es-BO';rec.interimResults=true;rec.continuous=false;showMicNotice('Dicta el contenido del campo.');
+ rec.onresult=e=>{let t='';for(let i=e.resultIndex;i<e.results.length;i++)t+=e.results[i][0].transcript;target.value=t;};
+ rec.onerror=e=>showMicNotice('Error de micrófono: '+e.error);
+ rec.onend=()=>setTimeout(()=>$('micNotice').classList.add('hidden'),1600);
+ try{rec.start();}catch(e){showMicNotice('No se pudo iniciar el micrófono.');}
+}
+document.addEventListener('DOMContentLoaded',addFieldDictation);
+
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+// PWA: instalación, actualización y caché de la aplicación.
+let deferredInstallPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+ e.preventDefault();deferredInstallPrompt=e;
+ const b=document.getElementById('installAppBtn');if(b)b.classList.remove('hidden');
+});
+async function installPWA(){
+ if(!deferredInstallPrompt){showMicNotice('Si no aparece la instalación, usa el menú del navegador: Instalar aplicación o Añadir a pantalla de inicio.');return;}
+ deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;
+ const b=document.getElementById('installAppBtn');if(b)b.classList.add('hidden');
+}
+window.addEventListener('appinstalled',()=>{
+ const b=document.getElementById('installAppBtn');if(b)b.classList.add('hidden');
+ showMicNotice('Emprende Gastro quedó instalada en tu dispositivo.');
+});
+if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
+ window.addEventListener('load',()=>{
+  navigator.serviceWorker.register('./service-worker.js').then(reg=>{
+   reg.addEventListener('updatefound',()=>{
+    const worker=reg.installing;if(!worker)return;
+    worker.addEventListener('statechange',()=>{
+     if(worker.state==='installed'&&navigator.serviceWorker.controller)showMicNotice('Hay una actualización disponible. Recarga la aplicación para aplicarla.');
+    });
+   });
+  }).catch(err=>console.warn('No se pudo registrar el modo PWA:',err));
+ });
+}
+
+
+window.addEventListener('resize',()=>{
+ if(!document.getElementById('breakEvenPanel')?.classList.contains('hidden'))calculateBreakEven();
+});
+
+
+function toggleSidebar(){
+ if(window.matchMedia('(max-width: 850px)').matches){
+  document.body.classList.toggle('sidebar-open');
+  const open=document.body.classList.contains('sidebar-open');
+  $('sidebarToggle')?.setAttribute('aria-expanded',String(open));
+ }else{
+  document.body.classList.toggle('sidebar-collapsed');
+  const expanded=!document.body.classList.contains('sidebar-collapsed');
+  $('sidebarToggle')?.setAttribute('aria-expanded',String(expanded));
+ }
+}
+function closeSidebar(){
+ document.body.classList.remove('sidebar-open');
+ $('sidebarToggle')?.setAttribute('aria-expanded','false');
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSidebar();});
+document.querySelectorAll('#sidebar .nav-btn').forEach(b=>{
+ b.addEventListener('click',()=>{if(window.matchMedia('(max-width: 850px)').matches)closeSidebar();});
+});
+window.addEventListener('resize',()=>{
+ if(!window.matchMedia('(max-width: 850px)').matches)document.body.classList.remove('sidebar-open');
+});
+
+</script>
+</body>
+</html>

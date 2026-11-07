@@ -1,0 +1,38 @@
+{
+  "id": "./",
+  "name": "Emprende Gastro – Asistente de proyectos",
+  "short_name": "Emprende Gastro",
+  "description": "Plataforma académica para ideas, innovación y proyectos de emprendimiento gastronómico.",
+  "lang": "es-BO",
+  "start_url": "./Emprende_Gastro.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f6fc",
+  "theme_color": "#253b8f",
+  "categories": [
+    "education",
+    "business",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
